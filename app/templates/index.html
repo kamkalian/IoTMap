@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div id="mapid"></div>
+
+<script>
+
+    // parst das übergebene geo_json in eine javascript variable
+	var geo_json = JSON.parse({{ geo_json|tojson|safe }})
+    
+    // Layer mit verschiedenen Tiles erstellen
+	var osm   = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: ['a','b','c']});
+
+    /*
+    Map einrichten. mapid ist die ID die auch beim DIV Container verwendet wird.
+    Mit Zoom wird der start Wert vorgegeben.
+    */
+    var map = L.map('mapid', {
+        layers: [osm],
+        zoom: 13,
+        minZoom: 10
+    });
+
+    // Eine eigene Icon Klasse erstellen
+    var GWIcon = L.Icon.extend({
+        options: {
+            shadowUrl: '{{ url_for('static', filename='gw_icon_shadow.png') }}',
+            iconSize:     [50, 100],
+            shadowSize:   [80, 114],
+            iconAnchor:   [28, 100],
+            shadowAnchor: [0, 114],
+            popupAnchor:  [-2, -100]
+        }
+    });
+
+    // Icon mit der eigenen Icon-Klasse erstellen
+    var greenIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_green.png') }}'});
+    var redIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_red.png') }}'});
+    var greyIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_grey.png') }}', opacity:0.5});
+    
+    /*
+    geoJSON in die Map laden.
+    Dabei werden für jeden Status ein anderes Icon verwendet.
+    Mit zIndexOffset wird verhindert das online Gateways durch offline Gateways überlagert werden.
+    */
+    L.geoJSON(geo_json, {
+    	pointToLayer: function (feature, latlng) {
+
+            var id = feature.properties.id;
+            var description = feature.properties.description;
+            var owner = feature.properties.owner;
+            var last_seen = feature.properties.last_seen;
+            var model = feature.properties.model;
+            var brand = feature.properties.brand;
+            var antenna_model = feature.properties.antenna_model;
+            var placement = feature.properties.placement;
+            var gw_state = feature.properties.gw_state;
+
+            var popup = L.popup()
+                .setLatLng(latlng)
+                .setContent(
+                    `<div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">`+id+`</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">`+description+`</h6>
+                        <table class="table mt-4">
+                            <tr><th>Eigentümer</th><td>`+owner+`</td></tr>
+                            <tr><th>Gateway Modell</th><td>`+model+`</td></tr>
+                            <tr><th>Gateway Hersteller</th><td>`+brand+`</td></tr>
+                            <tr><th>Antenne</th><td>`+antenna_model+`</td></tr>
+                            <tr><th>Standort</th><td>`+placement+`</td></tr>
+                        </table>
+                        
+                    </div>
+                    <div class="card-footer ">
+                        <div class="row">
+                            <div class="col border-right">Zuletzt gesehen am:<br>`+last_seen+`</div>
+                            <div class="col">`+gw_state+`</div>
+                        </div>
+                </div>`,
+                {'maxWidth': '320'});
+            
+            if(gw_state=='online'){
+                return L.marker(latlng, {
+                        icon: greenIcon,
+                        zIndexOffset: 1000
+                }).bindPopup(popup);
+            }
+            if(gw_state=='offline' || gw_state=='unknown'){
+                return L.marker(latlng, {
+                        icon: redIcon,
+                        zIndexOffset: 500
+                }).bindPopup(popup);
+            }
+            if(gw_state=='deceased'){
+                return L.marker(latlng, {
+                        icon: greyIcon,
+                        zIndexOffset: 100
+                }).bindPopup(popup);
+            }
+        }
+    }).addTo(map);
+
+    /*
+    Kreise für jedes Gateway zeichnen
+    */
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 5, 
+                    zIndexOffset: 50,
+                     
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
+
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 1000, 
+                    zIndexOffset: 50,
+                    weight: 1,
+                    opacity: 0.5,
+                    fillOpacity: 0.1, 
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
+
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 2000, 
+                    zIndexOffset: 50,
+                    weight: 1,
+                    opacity: 0.5,
+                    fillOpacity: 0.1, 
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
+
+    map.setView(new L.LatLng(50.814903908, 7.156198025), 12);
+
+    var baseMaps = {
+        "OpenStreetMap": osm,
+    };
+
+    L.control.layers(baseMaps).addTo(map);
+</script>
+{% endblock %}
