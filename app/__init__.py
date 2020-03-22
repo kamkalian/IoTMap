@@ -4,10 +4,24 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 
-app = Flask(__name__)
-app.config.from_object(Config)
+db = SQLAlchemy()
+migrate = Migrate()
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    app.app_context().push()
 
-from app import routes
+    db.init_app(app)
+    migrate.init_app(app, db)
+
+    from app.main import bp as main_bp
+    app.register_blueprint(main_bp)
+
+    from app.gps_tracker import bp as gps_tracker_bp
+    app.register_blueprint(gps_tracker_bp)
+
+    return app
+
+
+from app import models
