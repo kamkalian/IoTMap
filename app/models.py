@@ -31,7 +31,7 @@ class MessageLink(db.Model):
 
     msg_link_id = db.Column(db.Integer(), primary_key=True)
 
-    timestamp = db.Column(db.Integer())
+    timestamp = db.Column(db.String(64))
     channel = db.Column(db.Integer())
     rssi = db.Column(db.Integer())
     snr = db.Column(db.Float())

@@ -84,7 +84,7 @@ def receive_upink():
 
         # MessageLink in die Datenbank schreiben
         link_new = MessageLink(
-            timestamp=link['timestamp'],
+            timestamp=str(link['timestamp']),
             channel=link['channel'],
             rssi=link['rssi'],
             snr=link['snr'],

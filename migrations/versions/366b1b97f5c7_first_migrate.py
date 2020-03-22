@@ -54,7 +54,7 @@ def upgrade():
     )
     op.create_table('message_link',
     sa.Column('msg_link_id', sa.Integer(), nullable=False),
-    sa.Column('timestamp', sa.Integer(), nullable=True),
+    sa.Column('timestamp', sa.String(64), nullable=True),
     sa.Column('channel', sa.Integer(), nullable=True),
     sa.Column('rssi', sa.Integer(), nullable=True),
     sa.Column('snr', sa.Float(), nullable=True),
