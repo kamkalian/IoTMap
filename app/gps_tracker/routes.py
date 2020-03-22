@@ -3,6 +3,7 @@ from flask import request
 import json
 from app.models import Gateway, MessageLink, Message, Device
 from app import db
+from datetime import datetime
 
 
 @bp.route('/receive_uplink', methods=['POST'])
@@ -22,6 +23,11 @@ def receive_upink():
         db.session.commit()
         dev = dev_new
 
+    # datetime erstellen
+    time_str = msg_dict['time'].split('.')
+    time_dt = datetime.strptime(time_str[0], '%Y-%m-%dT%H:%M:%S')
+    time_str = time_dt.strftime('%Y-%m-%d %H:%M:%S')
+
     # Message in die Datenbank schreiben
     msg_new = Message(
         app_id=msg_dict['app_id'],
@@ -33,7 +39,7 @@ def receive_upink():
         latitude=msg_dict['latitude'],
         longitude=msg_dict['longitude'],
         sats=msg_dict['sats'],
-        time=msg_dict['time'],
+        time=time_str,
         frequency=msg_dict['frequency'],
         modulation=msg_dict['modulation'],
         data_rate=msg_dict['data_rate'],
