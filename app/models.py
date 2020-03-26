@@ -59,5 +59,12 @@ class Gateway(db.Model):
     latitude = db.Column(db.Float())
     longitude = db.Column(db.Float())
     altitude = db.Column(db.Integer())
+    last_seen = db.Column(db.DateTime())
+    description = db.Column(db.String(255), index=True)
+    owner = db.Column(db.String(64), index=True)
+    brand = db.Column(db.String(64), index=True)
+    model = db.Column(db.String(64), index=True)
+    antenna_model = db.Column(db.String(64), index=True)
+    placement = db.Column(db.String(64), index=True)
 
-    message_links = db.relationship('MessageLink', backref='gateway')
+    message_links = db.relationship('MessageLink', backref='gateway', lazy="dynamic")
