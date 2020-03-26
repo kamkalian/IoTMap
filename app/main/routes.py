@@ -83,7 +83,7 @@ def meters(p1, p2):
     return distance
 
 
-def gateway_state(json_data):
+def gateway_state(last_seen):
     '''
     Ermittelt anhand von 'last_seen' den Status eines Gateways.
     >5 Tage -> Gateway ist tot
@@ -91,23 +91,19 @@ def gateway_state(json_data):
     <=10 Minuten -> Gateway ist online
     '''
 
+    if not last_seen:
+        return 'unkown'
+
     # Aktuelle Zeit holen
     now_dt = datetime.now()
     
-    # last_seen aus json extrahieren und daraus ein datetime objekt machen
-    last_seen = json_data['last_seen']
-    try:
-        last_seen_dt = datetime.strptime(last_seen, '%Y-%m-%dT%H:%M:%SZ')
-    except:
-        return 'unknown'
-    
     # Anzahl Tage zwichen last_seen und jetzt ausrechnen
-    diff_days = (now_dt - last_seen_dt).days
+    diff_days = (now_dt - last_seen).days
 
     # Anzahl Sekunden zwichen last_seen und jetzt ausrechnen.
     # Mit -3600 wird noch eine Stunde für die Zeitverschiebung abgezogen
     # TODO Problem mit der Zeitverschiebung muss noch anders gelöst werden
-    diff_seconds = (now_dt - last_seen_dt).seconds-3600
+    diff_seconds = (now_dt - last_seen).total_seconds()
     
     # Abfragen und entsprechende Rückgabewerte
     if diff_days > 5:
