@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+fertig.
+<hr>
+<h2>Neue Gateways</h2>
+{% for gw in new_gw_list %}
+{{ gw }}<br>
+{% endfor %}
+<hr>
+<h2>Aktualisierte Gateways</h2>
+{% for gw in update_gw_list %}
+{{ gw }}<br>
+{% endfor %}
+
+
+{% endblock %}
