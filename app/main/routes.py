@@ -4,6 +4,9 @@ from flask import json
 from app.main import bp
 import requests
 from datetime import datetime
+from app.models import Gateway, MessageLink, Message, Device
+from math import sin, cos, sqrt, atan2, radians
+from sqlalchemy import and_
 
 
 r_earth = 6373.0
@@ -24,58 +27,40 @@ def index():
     # center al tuple
     center = (center_lat, center_lon)
 
-    # Gateways von thethingsnetwork.org holen
-    gateways = requests.get('https://www.thethingsnetwork.org/gateway-data/location?latitude=' + center_lat + '&amp;longitude=' + center_lon + '&amp;distance='+distance)
-    gateways_json = gateways.json()
-    # print(gateways_json)
+    gateway_list = Gateway.query.all()
 
     # GeoJSON erstellen
     geo_json = { 'type': 'FeatureCollection' }
     features = []
-    for gw_key in gateways_json:
-        try:
-            lat = gateways_json[gw_key]['location']['latitude']
-            lon = gateways_json[gw_key]['location']['longitude']
-            
-            # Prüfen welche Daten vorhanden sind, um KeyErrors zu verhindern
-            if 'description' not in gateways_json[gw_key]:
-                gateways_json[gw_key]['description'] = '-'
-            if 'owner' not in gateways_json[gw_key]:
-                gateways_json[gw_key]['owner'] = '-'
-            if 'brand' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['brand'] = '-'
-            if 'model' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['model'] = '-'
-            if 'antenna_model' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['antenna_model'] = '-'
-            if 'placement' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['placement'] = '-'
-            if 'last_seen' not in gateways_json[gw_key]:
-                print(gw_key)
-                gateways_json[gw_key]['last_seen'] = '-'
-            
+    for gateway in gateway_list:
+        
+        # Hat das Gateway Koordinaten?
+        if gateway.latitude and gateway.longitude:
+            print(gateway.gtw_id, gateway.last_seen)
+
+            lat = gateway.latitude
+            lon = gateway.longitude
+        
             # feature aus allen Daten zusammensetzen und dem features dict hinzufügen
-            
             feature = { 
                 'type': 'Feature', 
                 'geometry': {'type': 'Point', 'coordinates': [lon, lat] },
                 'properties': {
-                    'id': gw_key, 
-                    'gw_state': gateway_state(gateways_json[gw_key]),
-                    'description': gateways_json[gw_key]['description'],
-                    'owner': gateways_json[gw_key]['owner'],
-                    'last_seen': gateways_json[gw_key]['last_seen'],
-                    'brand': gateways_json[gw_key]['attributes']['brand'],
-                    'model': gateways_json[gw_key]['attributes']['model'],
-                    'antenna_model': gateways_json[gw_key]['attributes']['antenna_model'],
-                    'placement': gateways_json[gw_key]['attributes']['placement']
+                    'id': gateway.gtw_id, 
+                    'gw_state': gateway_state(gateway.last_seen),
+                    'description': gateway.description,
+                    'owner': gateway.owner,
+                    'last_seen': gateway.last_seen,
+                    'brand': gateway.brand,
+                    'model': gateway.model,
+                    'antenna_model': gateway.antenna_model,
+                    'placement': gateway.placement
                     },
             }
             features.append(feature)
-            
-        except KeyError as e:
-            print(gw_key)
-            print(e)
+        
+
+    geo_json['features'] = features
 
             pass
             #print('KeyError')
