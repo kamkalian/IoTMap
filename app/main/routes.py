@@ -6,6 +6,9 @@ import requests
 from datetime import datetime
 
 
+r_earth = 6373.0
+
+
 @bp.route('/')
 @bp.route('/index')
 def index():
