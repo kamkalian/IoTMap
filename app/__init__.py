@@ -21,6 +21,9 @@ def create_app():
     from app.gps_tracker import bp as gps_tracker_bp
     app.register_blueprint(gps_tracker_bp)
 
+    from app.gateway_sync import bp as gateway_sync_bp
+    app.register_blueprint(gateway_sync_bp)
+
     return app
 
 
