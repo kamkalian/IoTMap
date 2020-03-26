@@ -2,7 +2,7 @@ import requests
 from app.models import Gateway, MessageLink, Message, Device
 from flask import json
 from app import db
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def think_positive(value):
@@ -69,8 +69,8 @@ def ttn_sync(center_lat, center_lon, distance):
                 if 'placement' in gateways_json[gw_key]['attributes']:
                     placement = gateways_json[gw_key]['attributes']['placement']
 
-                if 'last_seen' in gateways_json[gw_key]['last_seen']:
-                    last_seen_dt = datetime.strptime(gateways_json[gw_key]['last_seen'], '%Y-%m-%dT%H:%M:%SZ')
+                if 'last_seen' in gateways_json[gw_key]:
+                    last_seen_dt = datetime.strptime(gateways_json[gw_key]['last_seen'], '%Y-%m-%dT%H:%M:%SZ') + timedelta(seconds=3600)
 
             except Exception as e:
                 print(e)
@@ -95,6 +95,7 @@ def ttn_sync(center_lat, center_lon, distance):
 
             # Prüfen ob die anderen Daten abweichen, ansonsten aktualisieren
             # last_seen
+            print(last_seen_dt, gw_db.last_seen)
             if last_seen_dt and (last_seen_dt - gw_db.last_seen).total_seconds() > 600:
                 gw_db.last_seen = last_seen_dt
                 is_updated = True
