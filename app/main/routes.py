@@ -70,7 +70,17 @@ def index():
     return render_template(
         'index.html',
         title=u'FFRS-TTN-Map',
-        geo_json=json.dumps(geo_json))
+def meters(p1, p2):    
+    
+    dlat = radians(p2[0]-p1[0])
+    dlon = radians(p2[1]-p1[1])
+    
+    a = sin(dlat / 2)**2 + cos(p1[0]) * sin(dlon / 2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    
+    distance = r_earth * c * 1000
+
+    return distance
 
 
 def gateway_state(json_data):
