@@ -95,7 +95,10 @@ def ttn_sync(center_lat, center_lon, distance):
 
             # Prüfen ob die anderen Daten abweichen, ansonsten aktualisieren
             # last_seen
-            if last_seen_dt and (last_seen_dt - gw_db.last_seen).total_seconds() > 600:
+            if last_seen_dt and gw_db.last_seen == None:
+                gw_db.last_seen = last_seen_dt
+                is_updated = True
+            elif last_seen_dt and (last_seen_dt - gw_db.last_seen).total_seconds() > 30:
                 gw_db.last_seen = last_seen_dt
                 is_updated = True
 
