@@ -9,9 +9,6 @@ from app.main import geo_functions
 from sqlalchemy import and_
 
 
-r_earth = 6373.0
-
-
 @bp.route('/')
 @bp.route('/index')
 def index():
