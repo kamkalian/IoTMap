@@ -112,7 +112,7 @@
     /*
     Zeichne Polygone, die die gemessenen Punkte auf der Karte darstellen
     */
-    L.geoJSON(geo_json_polys, {
+    var range_poly = L.geoJSON(geo_json_polys, {
     	style(feature) {
             return {
                 fillColor: feature.fill_color,
@@ -120,14 +120,22 @@
                 fillOpacity: 0.5
             };
         }
-    }).addTo(map);
+    });
+
+    var range_layer = L.layerGroup([range_poly]);
+
 
     map.setView(new L.LatLng(50.814903908, 7.156198025), 12);
 
     var baseMaps = {
-        "OpenStreetMap": osm,
+        "OpenStreetMap": osm
     };
 
-    L.control.layers(baseMaps).addTo(map);
+    var overlayMaps = {
+        "range_layer": range_layer
+    };
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
+
 </script>
 {% endblock %}
