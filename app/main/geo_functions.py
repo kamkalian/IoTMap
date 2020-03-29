@@ -108,16 +108,22 @@ def feature(msg_list, gtw, fill_color):
     # Gateway Punkt als ersten Punkt einfügen
     point_list.append([gtw.longitude, gtw.latitude])
 
-    # Alle Punkte der point_list als Tuple hinzufügen
-    for msg in msg_list:
-        point_list.append((msg.longitude, msg.latitude))
+    # Fehler abfangen
+    try:
 
-    # Convexe Hülle aus den Punkte erstellen
-    polygon_hull = Polygon.convex_hull(point_list)
+        # Alle Punkte der point_list als Tuple hinzufügen
+        for msg in msg_list:
+            point_list.append((msg.longitude, msg.latitude))
 
-    # Die Punkte aus der convexen Hülle zum polygon hinzufügen
-    for point in polygon_hull:
-        polygon.append([point[0], point[1]])
+        # Convexe Hülle aus den Punkte erstellen
+        polygon_hull = Polygon.convex_hull(point_list)
+
+        # Die Punkte aus der convexen Hülle zum polygon hinzufügen
+        for point in polygon_hull:
+            polygon.append([point[0], point[1]])
+
+    except:
+        print('Fehler bei Gateway: ', gtw.gtw_id)
     
     # Feature erstellen und zu poly_features hinzufügen
     feature = {
