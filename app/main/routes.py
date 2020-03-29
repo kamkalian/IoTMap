@@ -169,6 +169,23 @@ def index():
         geo_json_polys=json.dumps(geo_json_polys))
 
 
+def gateway_feature_per_rssi(gtw, min_rssi, max_rssi, poly_features, fill_color):
+    
+    # Alle Messages für ein Gateway und in einem bestimmte Empfangsstärkebereich selektieren.
+    msg_list = [r.message for r in gtw.message_links.filter(
+        and_(
+            MessageLink.rssi <= max_rssi,
+            MessageLink.rssi > min_rssi,
+            MessageLink.gtw_id == gtw.gtw_id
+        )
+    ).all()]
+
+    if len(msg_list) > 2:
+        msg_cluster = geo_functions.msg_cluster(msg_list, 100)
+        for cluster in msg_cluster:
+            poly_features.append(geo_functions.feature(cluster, gtw, fill_color))
+
+
 def gateway_state(last_seen):
     '''
     Ermittelt anhand von 'last_seen' den Status eines Gateways.
