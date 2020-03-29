@@ -115,11 +115,9 @@
     L.geoJSON(geo_json_polys, {
     	style(feature) {
             return {
-                fillColor: "#ff0000",
-                weight: 2,
+                fillColor: feature.fill_color,
                 opacity: 0,
-                color: "#ff0000",
-                fillOpacity: 0.7
+                fillOpacity: 0.5
             };
         }
     }).addTo(map);
