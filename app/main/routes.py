@@ -33,7 +33,7 @@ def index():
         
         # Hat das Gateway Koordinaten?
         if gateway.latitude and gateway.longitude:
-            print(gateway.gtw_id, gateway.last_seen)
+            # print(gateway.gtw_id, gateway.last_seen)
 
             lat = gateway.latitude
             lon = gateway.longitude
