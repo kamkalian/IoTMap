@@ -5,7 +5,7 @@ from app.main import bp
 import requests
 from datetime import datetime
 from app.models import Gateway, MessageLink, Message, Device
-from math import sin, cos, sqrt, atan2, radians
+from app.main import geo_functions
 from sqlalchemy import and_
 
 
