@@ -16,7 +16,7 @@ def meters(p1, p2):
     return distance
 
 
-def nearest_msg(msg_list, current_msg):
+def nearest_msg(msg_list, current_msg, max_distance):
 
     smallest_msg = None
     smallest_distance = None
@@ -36,7 +36,10 @@ def nearest_msg(msg_list, current_msg):
             smallest_msg = msg
             smallest_distance = distance
 
-    return smallest_msg, smallest_distance
+    if smallest_msg != None and smallest_distance <= max_distance:
+        return smallest_msg, smallest_distance
+    
+    return None, None
 
 
 def nearest_msg_to_gateway(msg_list, gateway):
