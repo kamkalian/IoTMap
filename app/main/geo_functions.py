@@ -1,4 +1,5 @@
 from math import sin, cos, sqrt, atan2, radians
+from planar import Polygon
 
 r_earth = 6373.0
 
@@ -94,3 +95,37 @@ def nearest_msg_to_gateway(msg_list, gateway):
             smallest_distance = distance
 
     return smallest_msg
+
+
+def feature(msg_list, gtw, fill_color):
+
+    # Polygon das später zum GeoJson hinzugefügt wird
+    polygon = []
+
+    # Punkte Liste für planar Polygon
+    point_list = []
+
+    # Gateway Punkt als ersten Punkt einfügen
+    point_list.append([gtw.longitude, gtw.latitude])
+
+    # Alle Punkte der point_list als Tuple hinzufügen
+    for msg in msg_list:
+        point_list.append((msg.longitude, msg.latitude))
+
+    # Convexe Hülle aus den Punkte erstellen
+    polygon_hull = Polygon.convex_hull(point_list)
+
+    # Die Punkte aus der convexen Hülle zum polygon hinzufügen
+    for point in polygon_hull:
+        polygon.append([point[0], point[1]])
+    
+    # Feature erstellen und zu poly_features hinzufügen
+    feature = {
+        'type': 'Feature',
+        'fill_color': fill_color,
+        'geometry': {'type': 'Polygon', 'coordinates': [
+            polygon
+            ]}
+    }
+    
+    return feature
