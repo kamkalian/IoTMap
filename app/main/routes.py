@@ -99,7 +99,7 @@ def gateway_feature_per_rssi(gtw, min_rssi, max_rssi, poly_features, fill_color)
     ).all()]
 
     if len(msg_list) > 2:
-        msg_cluster = geo_functions.msg_cluster(msg_list, 100)
+        msg_cluster = geo_functions.msg_cluster(msg_list, 300)
         for cluster in msg_cluster:
             poly_features.append(geo_functions.feature(cluster, gtw, fill_color))
 
