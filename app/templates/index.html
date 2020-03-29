@@ -107,50 +107,20 @@
             }
         }
     }).addTo(map);
+    
 
     /*
-    Kreise für jedes Gateway zeichnen
+    Zeichne Polygone, die die gemessenen Punkte auf der Karte darstellen
     */
-    L.geoJSON(geo_json, { 
-    	pointToLayer: function (feature, latlng) {
-            var gw_state = feature.properties.gw_state;
-            if(gw_state=='online'){
-                return L.circle(latlng, {
-                    radius: 5, 
-                    zIndexOffset: 50,
-                     
-                    color: '#0d83d0'});
-            }
-        }
-    }).addTo(map);
-
-    L.geoJSON(geo_json, { 
-    	pointToLayer: function (feature, latlng) {
-            var gw_state = feature.properties.gw_state;
-            if(gw_state=='online'){
-                return L.circle(latlng, {
-                    radius: 1000, 
-                    zIndexOffset: 50,
-                    weight: 1,
-                    opacity: 0.5,
-                    fillOpacity: 0.1, 
-                    color: '#0d83d0'});
-            }
-        }
-    }).addTo(map);
-
-    L.geoJSON(geo_json, { 
-    	pointToLayer: function (feature, latlng) {
-            var gw_state = feature.properties.gw_state;
-            if(gw_state=='online'){
-                return L.circle(latlng, {
-                    radius: 2000, 
-                    zIndexOffset: 50,
-                    weight: 1,
-                    opacity: 0.5,
-                    fillOpacity: 0.1, 
-                    color: '#0d83d0'});
-            }
+    L.geoJSON(geo_json_polys, {
+    	style(feature) {
+            return {
+                fillColor: "#ff0000",
+                weight: 2,
+                opacity: 0,
+                color: "#ff0000",
+                fillOpacity: 0.7
+            };
         }
     }).addTo(map);
 
