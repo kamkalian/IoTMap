@@ -98,8 +98,8 @@ def ttn_sync(center_lat, center_lon, distance):
             if last_seen_dt and gw_db.last_seen == None:
                 gw_db.last_seen = last_seen_dt
                 is_updated = True
-            elif last_seen_dt and (last_seen_dt - gw_db.last_seen).total_seconds() > 30:
-                gw_db.last_seen = last_seen_dt
+            elif last_seen_dt and (last_seen_dt + timedelta(seconds=3600) - gw_db.last_seen).total_seconds() > 30:
+                gw_db.last_seen = last_seen_dt + timedelta(seconds=3600)
                 is_updated = True
 
             # Description
