@@ -54,7 +54,7 @@ class TTNMQTTClient():
                 msg_dict['links'].append(link_dict)
            
             msg_json = json.dumps(msg_dict)
-            r = requests.post('http://localhost:5000/receive_uplink', data=msg_json)
+            r = requests.post('http://localhost:8000/receive_uplink', data=msg_json)
             # print(r)
         except Exception as e:
             print(e)
