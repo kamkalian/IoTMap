@@ -1,8 +1,5 @@
 from flask import Blueprint
-from app.config import Config
+from app.gateway_sync.ttn_sync import run_ttn_sync
 
 
 bp = Blueprint('gateway_sync', __name__)
-
-
-from app.gateway_sync import routes
