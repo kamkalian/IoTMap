@@ -63,7 +63,8 @@ def index():
     # Dazu müssen die Daten von den Tracker geholt und ausgewertet werden.
     geo_json_polys = { 'type': 'FeatureCollection' }
     poly_features = []
-    gtw_list = Gateway.query.all()
+    #gtw_list = Gateway.query.all()
+    gtw_list = []
     for gtw in gtw_list:
 
         #if gtw.gtw_id != 'eui-313532352e005300':
