@@ -1,7 +1,7 @@
 import requests
 from app.models import Gateway, MessageLink, Message, Device
 from flask import json
-from app import db
+from app import db, scheduler
 from datetime import datetime, timedelta
 
 
@@ -147,49 +147,14 @@ def ttn_sync(center_lat, center_lon, distance):
 
     return new_gw_list, update_gw_list
 
-'''
 
+@scheduler.task('interval', id='do_job_1', seconds=300)
+def run_ttn_sync():
 
+    center_lat = '50.820329'
+    center_lon = '7.141111'
+    distance = '25000'
 
-            lat = gateways_json[gw_key]['location']['latitude']
-            lon = gateways_json[gw_key]['location']['longitude']
-            
-            # Prüfen welche Daten vorhanden sind, um KeyErrors zu verhindern
-            if 'description' not in gateways_json[gw_key]:
-                gateways_json[gw_key]['description'] = '-'
-            if 'owner' not in gateways_json[gw_key]:
-                gateways_json[gw_key]['owner'] = '-'
-            if 'brand' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['brand'] = '-'
-            if 'model' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['model'] = '-'
-            if 'antenna_model' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['antenna_model'] = '-'
-            if 'placement' not in gateways_json[gw_key]['attributes']:
-                gateways_json[gw_key]['attributes']['placement'] = '-'
-            if 'last_seen' not in gateways_json[gw_key]:
-                print(gw_key)
-                gateways_json[gw_key]['last_seen'] = '-'
-            
-            # feature aus allen Daten zusammensetzen und dem features dict hinzufügen
-            
-            feature = { 
-                'type': 'Feature', 
-                'geometry': {'type': 'Point', 'coordinates': [lon, lat] },
-                'properties': {
-                    'id': gw_key, 
-                    'gw_state': gateway_state(gateways_json[gw_key]),
-                    'description': gateways_json[gw_key]['description'],
-                    'owner': gateways_json[gw_key]['owner'],
-                    'last_seen': gateways_json[gw_key]['last_seen'],
-                    'brand': gateways_json[gw_key]['attributes']['brand'],
-                    'model': gateways_json[gw_key]['attributes']['model'],
-                    'antenna_model': gateways_json[gw_key]['attributes']['antenna_model'],
-                    'placement': gateways_json[gw_key]['attributes']['placement']
-                    },
-            }
-            features.append(feature)
-
-'''
-
-
+    with scheduler.app.app_context():
+        new_gw_list, update_gw_list = ttn_sync(center_lat, center_lon, distance)
+        print(len(new_gw_list), len(update_gw_list))
