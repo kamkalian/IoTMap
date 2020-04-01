@@ -1,5 +1,5 @@
 #!/venv/bin/python3
-from flask import render_template
+from flask import render_template, redirect, flash
 from flask import json
 from app.main import bp
 import requests
@@ -24,7 +24,11 @@ def index():
     # center al tuple
     center = (center_lat, center_lon)
 
-    gateway_list = Gateway.query.all()
+    try:
+        gateway_list = Gateway.query.all()
+    except:
+        flash('Datenbank Fehler!')
+        redirect('main.index')
 
     # GeoJSON erstellen
     geo_json = { 'type': 'FeatureCollection' }
@@ -63,8 +67,8 @@ def index():
     # Dazu müssen die Daten von den Tracker geholt und ausgewertet werden.
     geo_json_polys = { 'type': 'FeatureCollection' }
     poly_features = []
-    #gtw_list = Gateway.query.all()
-    gtw_list = []
+    gtw_list = Gateway.query.all()
+    #gtw_list = []
     for gtw in gtw_list:
 
         #if gtw.gtw_id != 'eui-313532352e005300':
