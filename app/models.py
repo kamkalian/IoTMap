@@ -68,3 +68,25 @@ class Gateway(db.Model):
     placement = db.Column(db.String(64), index=True)
 
     message_links = db.relationship('MessageLink', backref='gateway', lazy="dynamic")
+
+
+class Polygonpoint(db.Model):
+
+    pgp_id = db.Column(db.Integer(), primary_key=True)
+
+    latitude = db.Column(db.Float())
+    longitude = db.Column(db.Float())
+
+    polygon_id = db.Column(db.Integer(), db.ForeignKey('polygon.poly_id'))
+
+
+class Polygon(db.Model):
+
+    poly_id = db.Column(db.Integer(), primary_key=True)
+
+    fill_color = db.Column(db.String(10))
+
+    gtw_id = db.Column(db.String(80), db.ForeignKey('gateway.gtw_id'))
+    polygon_points = db.relationship('Polygonpoint', backref='polygon')
+
+    
