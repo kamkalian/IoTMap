@@ -5,8 +5,8 @@ from app.main import bp
 import requests
 from datetime import datetime
 from app.models import Gateway, MessageLink, Message, Device
-from app.main import geo_functions
 from sqlalchemy import and_
+from app.polygon_builder.Rangearea import Rangearea
 
 
 @bp.route('/')
