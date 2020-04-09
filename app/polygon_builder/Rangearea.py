@@ -163,16 +163,19 @@ class Rangearea():
                         cluster_list = self._cluster_list(rssi_area['temp_point_list'], 300)
 
                         for cluster in cluster_list:
+
+                            convex_polygon = None
+
+                            try:
                             
-                            # Convexe Hülle generieren, dazu wird mit Shapely ein Polygon erstellt.
-                            # An den Cluster wird noch der Punkt vom Gateway dran gehangen.
-                            polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
+                                # Convexe Hülle generieren, dazu wird mit Shapely ein Polygon erstellt.
+                                # An den Cluster wird noch der Punkt vom Gateway dran gehangen.
+                                polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
 
-                            convex_polygon = polygon.convex_hull
+                                convex_polygon = polygon.convex_hull
 
-                            # Von dem Polygon werden noch alle anderen Polygone abgezogen
-                            #for shapely_polygon in self.shapely_polygon_list:
-                            #     convex_polygon = convex_polygon.difference(shapely_polygon)
+                            except:
+                                print('error in analyse')
 
                             # Nur das Polygon hinzufügen wenn es auch ein Polygon ist.
                             if type(convex_polygon) is Polygon:
