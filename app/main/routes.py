@@ -27,8 +27,7 @@ def index():
     try:
         gateway_list = Gateway.query.all()
     except:
-        flash('Datenbank Fehler!')
-        redirect('main.index')
+        return """Datenbank Fehler!"""
 
     # GeoJSON erstellen
     geo_json = { 'type': 'FeatureCollection' }
