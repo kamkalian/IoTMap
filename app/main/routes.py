@@ -62,50 +62,54 @@ def index():
 
     geo_json['features'] = features
 
-    # GeoJson für die Polygone bauen
-    # Dazu müssen die Daten von den Tracker geholt und ausgewertet werden.
-    geo_json_polys = { 'type': 'FeatureCollection' }
-    poly_features = []
-    gtw_list = Gateway.query.all()
-    #gtw_list = []
-    for gtw in gtw_list:
+    # Ein Rangearea Object anlegen
+    range_area = Rangearea()
 
-        #if gtw.gtw_id != 'eui-313532352e005300':
-        #    continue
+    # RSSI Bereiche definieren
+    range_area.add_rssi_range(-99, 0, '#ff0000')
+    range_area.add_rssi_range(-104, -100, '#FF7F00')
+    range_area.add_rssi_range(-109, -105, '#ffff00')
+    range_area.add_rssi_range(-114, -110, '#00ff00')
+    range_area.add_rssi_range(-119, -115, '#00ffff')
+    range_area.add_rssi_range(-200, -120, '#0000ff')
+    
+    range_point_list = []
 
-        gateway_feature_per_rssi(gtw, -200, -120, poly_features, '#0000ff')
-        gateway_feature_per_rssi(gtw, -120, -115, poly_features, '#00ffff')
-        gateway_feature_per_rssi(gtw, -115, -110, poly_features, '#00ff00')
-        gateway_feature_per_rssi(gtw, -110, -105, poly_features, '#ffff00')
-        gateway_feature_per_rssi(gtw, -105, -100, poly_features, '#FF7F00')
-        gateway_feature_per_rssi(gtw, -100, 0, poly_features, '#ff0000')
-        
-        
-        
-    geo_json_polys['features'] = poly_features
+    # Alle Gateways durchgehen
+    for gateway in gateway_list:
+
+        # Gateway hinzufügen
+        range_area.add_gateway(
+            gateway.gtw_id,
+            gateway.latitude,
+            gateway.longitude)
+
+        # Alle message_links des Gateways durchgehen und eine range_point_list erstellen
+
+        for message_link in gateway.message_links.order_by(MessageLink.rssi).limit(50).all():
+
+            range_point = Rangearea.range_point(
+                message_link.message.latitude,
+                message_link.message.longitude,
+                message_link.message.altitude, 
+                message_link.rssi,
+                gateway.gtw_id)
+
+            range_point_list.append(range_point)
+
+    print(len(range_point_list))
+
+    # Die erstellte range_point_list dem range_area Objekt hinzufügen
+    range_area.add_range_point_list(range_point_list)
+
+    # Analyse des Rangearea Objekts starten
+    range_area.analyse()   
 
     return render_template(
         'index.html',
         title=u'FFRS-TTN-Map',
         geo_json=json.dumps(geo_json),
-        geo_json_polys=json.dumps(geo_json_polys))
-
-
-def gateway_feature_per_rssi(gtw, min_rssi, max_rssi, poly_features, fill_color):
-    
-    # Alle Messages für ein Gateway und in einem bestimmte Empfangsstärkebereich selektieren.
-    msg_list = [r.message for r in gtw.message_links.filter(
-        and_(
-            MessageLink.rssi <= max_rssi,
-            MessageLink.rssi > min_rssi,
-            MessageLink.gtw_id == gtw.gtw_id
-        )
-    ).all()]
-
-    if len(msg_list) > 2:
-        msg_cluster = geo_functions.msg_cluster(msg_list, 300)
-        for cluster in msg_cluster:
-            poly_features.append(geo_functions.feature(cluster, gtw, fill_color))
+        geo_json_polys=range_area.geo_json())
 
 
 def gateway_state(last_seen):
