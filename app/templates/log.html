@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="container">
+    <h1>Log</h1>
+    <hr>
+    <div class="row">
+        <div class="col">
+            <h2>Letzte 50 Nachrichten der Tracker</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Gerätename</th>
+                        <th>Datum / Uhrzeit</th>
+                        <th>Koordinaten</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lm in last_messages %}
+                    <tr class="small">
+                        <td>{{ lm.dev_id }}</td>
+                        <td>{{ lm.time }}</td>
+                        <td>{{ lm.latitude }}, {{ lm.longitude }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
