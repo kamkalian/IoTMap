@@ -77,7 +77,7 @@ class Rangearea():
         und auf Gateways, RSSI Bereiche und Cluster aufgeteilt.
         '''
 
-        print('Start analyse()')
+        # print('Start analyse()')
 
         # Ermittle Gateways
         #self.gateway_id_list = []
@@ -88,7 +88,7 @@ class Rangearea():
                 self.gateway_id_list.append(range_point.gateway_id)
         '''
 
-        print('Anzahl Gateways: ', len(self.gateway_list))
+        # print('Anzahl Gateways: ', len(self.gateway_list))
 
         # Schleife über alle Gateways, dabei wird die polygon_list geleert
         self.polygon_list = []
@@ -100,7 +100,7 @@ class Rangearea():
 
             i += 1
 
-            print('### ', i, gateway['gtw_id'])
+            # print('### ', i, gateway['gtw_id'])
 
             # Variable für temporäre Koordinaten, 
             # die benutzt werden wenn alle Punkte in ein Polygon rein kommen (keine RSSI Bereiche).
@@ -144,8 +144,8 @@ class Rangearea():
 
                         temp_coords.append([range_point.longitude, range_point.latitude])
 
-            print('Anzahl Points: ', c)
-            print('Points per RSSI: ', [len(r['temp_point_list']) for r in self.rssi_area_list])
+            # print('Anzahl Points: ', c)
+            # print('Points per RSSI: ', [len(r['temp_point_list']) for r in self.rssi_area_list])
 
             # Hier wird die polygon_list gefüllt, entweder für jeden RSSI Bereich ein Polygon,
             # oder nur ein Polygon mit allen Punkten
@@ -185,7 +185,8 @@ class Rangearea():
                                     {
                                         'prio': prio, 
                                         'polygon': convex_polygon,
-                                        'fill_color': rssi_area['fill_color']
+                                        'fill_color': rssi_area['fill_color'],
+                                        'gtw_id': gateway['gtw_id']
                                     }
                                 )
                                 '''
@@ -203,7 +204,7 @@ class Rangearea():
                             else:
                                 print(type(convex_polygon))
 
-        print('Anzahl shapely Polygone: ', len(self.shapely_polygon_list))
+        # print('Anzahl shapely Polygone: ', len(self.shapely_polygon_list))
         
         for shapely_polygon in self.shapely_polygon_list:
 
@@ -220,6 +221,7 @@ class Rangearea():
                 temp_coords = [[r[0], r[1]] for r in shapely_polygon['polygon'].exterior.coords]
 
                 self.polygon_list.append({
+                    'gtw_id': shapely_polygon['gtw_id'],
                     'fill_color': shapely_polygon['fill_color'],
                     'coords': temp_coords
                 })
