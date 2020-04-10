@@ -145,3 +145,24 @@ def gateway_state(last_seen):
     
     # An dieser stelle wird 'unknown' zurückgegeben, wenn die anderen Regeln nicht gegriffen haben.
     return 'unknown'
+
+
+@bp.route('/log')
+def log():
+    """
+    Route zur Log Seite
+    """
+
+    last_messages = []
+    try:
+        # letzte Messages aus der Datenbank holen
+        last_messages = Message.query.order_by(Message.time.desc()).limit(50).all()
+
+        # for message in last_messages:
+        #     print(message.time)
+    except:
+        flash('Datenbank Fehler!')
+
+    return render_template(
+        'log.html',
+        title=u'Log', last_messages=last_messages)
