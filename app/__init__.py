@@ -28,6 +28,9 @@ def create_app():
     from app.gateway_sync import bp as gateway_sync_bp
     app.register_blueprint(gateway_sync_bp)
 
+    from app.polygon_builder import bp as polygon_builder_bp
+    app.register_blueprint(polygon_builder_bp)
+
     return app
 
 
