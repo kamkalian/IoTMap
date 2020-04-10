@@ -68,6 +68,7 @@ class Gateway(db.Model):
     placement = db.Column(db.String(64), index=True)
 
     message_links = db.relationship('MessageLink', backref='gateway', lazy="dynamic")
+    polygons = db.relationship('Polygon', backref='gateway', lazy="dynamic")
 
 
 class Polygonpoint(db.Model):
