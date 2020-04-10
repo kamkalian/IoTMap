@@ -73,10 +73,11 @@ def index():
     range_area.add_rssi_range(-119, -115, '#00ffff')
     range_area.add_rssi_range(-200, -120, '#0000ff')
     
-    range_point_list = []
 
     # Alle Gateways durchgehen
     for gateway in gateway_list:
+
+        polygon_list = []
 
         # Gateway hinzufügen
         range_area.add_gateway(
@@ -84,26 +85,18 @@ def index():
             gateway.latitude,
             gateway.longitude)
 
-        # Alle message_links des Gateways durchgehen und eine range_point_list erstellen
+        for polygon_db in gateway.polygons:
 
-        for message_link in gateway.message_links.order_by(MessageLink.rssi).limit(50).all():
+            coords = []
+            for polygon_point_db in polygon_db.polygon_points:
+                coords.append([polygon_point_db.longitude, polygon_point_db.latitude])
+        
+            range_area.add_polygon(
+                gateway.gtw_id,
+                polygon_db.fill_color,
+                coords
+            )
 
-            range_point = Rangearea.range_point(
-                message_link.message.latitude,
-                message_link.message.longitude,
-                message_link.message.altitude, 
-                message_link.rssi,
-                gateway.gtw_id)
-
-            range_point_list.append(range_point)
-
-    print(len(range_point_list))
-
-    # Die erstellte range_point_list dem range_area Objekt hinzufügen
-    range_area.add_range_point_list(range_point_list)
-
-    # Analyse des Rangearea Objekts starten
-    range_area.analyse()   
 
     return render_template(
         'index.html',
