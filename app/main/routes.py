@@ -138,7 +138,7 @@ def gateway_state(last_seen):
     if diff_days > 5:
         return 'deceased'
     else:
-        if diff_seconds > 600: # 10 minutes
+        if diff_seconds > 3600: # 60 minutes
             return 'offline'
         else:
             return 'online'
