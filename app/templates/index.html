@@ -47,10 +47,27 @@
         }
     });
 
+    // Icon Klasse für Indoor Gateways erstellnen
+    var GWIconIndoor = L.Icon.extend({
+        options: {
+            shadowUrl: '{{ url_for('static', filename='gw_indoor_icon_shadow.png') }}',
+            iconSize:     [50, 50],
+            shadowSize:   [80, 54],
+            iconAnchor:   [28, 50],
+            shadowAnchor: [0, 54],
+            popupAnchor:  [-2, -50]
+        }
+    });
+
     // Icon mit der eigenen Icon-Klasse erstellen
     var greenIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_green.png') }}'});
     var redIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_red.png') }}'});
     var greyIcon = new GWIcon({iconUrl: '{{ url_for('static', filename='gw_icon_grey.png') }}', opacity:0.5});
+
+    // Indoor Icons mit der eigenen Icon-Klasse erstellen
+    var greenIndoorIcon = new GWIconIndoor({iconUrl: '{{ url_for('static', filename='gw_indoor_icon_green.png') }}'});
+    var redIndoorIcon = new GWIconIndoor({iconUrl: '{{ url_for('static', filename='gw_indoor_icon_red.png') }}'});
+    var greyIndoorIcon = new GWIconIndoor({iconUrl: '{{ url_for('static', filename='gw_indoor_icon_grey.png') }}', opacity:0.5});
     
     /*
     geoJSON in die Map laden.
@@ -95,21 +112,42 @@
                 </div>`,
                 {'maxWidth': '320'});
             
-            if(gw_state=='online'){
+            // Outdoor
+            if(gw_state=='online' && placement=='outdoor'){
                 return L.marker(latlng, {
                         icon: greenIcon,
                         zIndexOffset: 1000
                 }).bindPopup(popup);
             }
-            if(gw_state=='offline' || gw_state=='unknown'){
+            if((gw_state=='offline' || gw_state=='unknown') && placement=='outdoor'){
                 return L.marker(latlng, {
                         icon: redIcon,
                         zIndexOffset: 500
                 }).bindPopup(popup);
             }
-            if(gw_state=='deceased'){
+            if(gw_state=='deceased' && placement=='outdoor'){
                 return L.marker(latlng, {
                         icon: greyIcon,
+                        zIndexOffset: 100
+                }).bindPopup(popup);
+            }
+
+            // Indoor
+            if(gw_state=='online' && placement=='indoor'){
+                return L.marker(latlng, {
+                        icon: greenIndoorIcon,
+                        zIndexOffset: 1000
+                }).bindPopup(popup);
+            }
+            if((gw_state=='offline' || gw_state=='unknown') && placement=='indoor'){
+                return L.marker(latlng, {
+                        icon: redIndoorIcon,
+                        zIndexOffset: 500
+                }).bindPopup(popup);
+            }
+            if(gw_state=='deceased' && placement=='indoor'){
+                return L.marker(latlng, {
+                        icon: greyIndoorIcon,
                         zIndexOffset: 100
                 }).bindPopup(popup);
             }
