@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from app.polygon_builder.Rangearea import Rangearea
 
 
-@scheduler.task('interval', id='do_job_2', seconds=3600)
+# @scheduler.task('interval', id='do_job_2', seconds=3600)
 def run_polygon_builder():
 
     with scheduler.app.app_context():
