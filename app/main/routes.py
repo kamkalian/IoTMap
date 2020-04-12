@@ -97,12 +97,21 @@ def index():
                 coords
             )
 
+    # Variable prev_site holen.
+    prev_site = request.args.get('prev_site')
+
+    # Animation nur wenn die vorherige Seite nicht index war.
+    animation = None
+    if prev_site != 'index':
+        animation = 'half'
 
     return render_template(
         'index.html',
         title=u'FFRS-TTN-Map',
         geo_json=json.dumps(geo_json),
-        geo_json_polys=range_area.geo_json())
+        geo_json_polys=range_area.geo_json(),
+        site='index',
+        animation=animation)
 
 
 def gateway_state(last_seen):
@@ -145,6 +154,14 @@ def log():
     """
     Route zur Log Seite
     """
+    
+    # Variable prev_site holen.
+    prev_site = request.args.get('prev_site')
+
+    # Animation nur wenn die vorherige Seite die Index Seite war.
+    animation = None
+    if prev_site == 'index':
+        animation = 'full'
 
     last_messages = []
     try:
@@ -158,4 +175,4 @@ def log():
 
     return render_template(
         'log.html',
-        title=u'Log', last_messages=last_messages)
+        title=u'Log', last_messages=last_messages, site='log', animation=animation)
