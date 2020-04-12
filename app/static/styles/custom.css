@@ -8,6 +8,57 @@ body {
 	height:100vh;
 }
 
+.ffrs-nav-half{
+	position:absolute;
+	top:0;
+	left:0;
+	z-index: 9999;
+	width:100%;
+}
+
+.ffrs-nav-half-animation{
+	left:25%;
+	width:50%;
+	border-radius: 0 0 15px 15px;
+
+	-webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.ffrs-nav-half-without-animation{
+	position:absolute;
+	top:0;
+	left:0;
+	z-index: 9999;
+	left:25%;
+	width:50%;
+	border-radius: 0 0 15px 15px;
+}
+
+
+
+.ffrs-nav-full{
+	
+	z-index: 9999;
+	width:50%;
+	border-radius: 0 0 15px 15px;
+}
+
+.ffrs-nav-full-animation{
+	
+	width:100%;
+	border-radius: 0 0 0 0;
+
+	-webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+
+
 .leaflet-tile-pane {
   -webkit-filter: grayscale(50%);
   filter: grayscale(50%);
