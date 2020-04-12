@@ -2,17 +2,10 @@
 
 {% block content %}
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-danger" role="alert">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
 <div id="mapid"></div>
 
 <script>
+console.log('hi from jQuery!');
 
     // parst das übergebene geo_json in eine javascript variable
 	var geo_json = JSON.parse({{ geo_json|tojson|safe }})
