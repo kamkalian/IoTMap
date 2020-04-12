@@ -1,5 +1,5 @@
 #!/venv/bin/python3
-from flask import render_template, redirect, flash
+from flask import render_template, redirect, flash, url_for, request
 from flask import json
 from app.main import bp
 import requests
