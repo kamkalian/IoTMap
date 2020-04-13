@@ -170,7 +170,8 @@ class Rangearea():
                             
                                 # Convexe Hülle generieren, dazu wird mit Shapely ein Polygon erstellt.
                                 # An den Cluster wird noch der Punkt vom Gateway dran gehangen.
-                                polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
+                                # polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
+                                polygon = Polygon(cluster)
 
                                 convex_polygon = polygon.convex_hull
 
