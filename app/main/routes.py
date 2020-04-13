@@ -3,7 +3,7 @@ from flask import render_template, redirect, flash, url_for, request
 from flask import json
 from app.main import bp
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from app.models import Gateway, MessageLink, Message, Device
 from sqlalchemy import and_
 from app.polygon_builder.Rangearea import Rangearea
@@ -152,8 +152,11 @@ def log():
         # letzte Messages aus der Datenbank holen
         last_messages = Message.query.order_by(Message.time.desc()).limit(50).all()
 
-        # for message in last_messages:
-        #     print(message.time)
+        for message in last_messages:
+            new_time = message.time + + timedelta(seconds=7200)
+            message.time = new_time
+            #print(message.time, new_time)
+
     except:
         flash('Datenbank Fehler!')
 
