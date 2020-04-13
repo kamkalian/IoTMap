@@ -9,11 +9,6 @@ body {
 }
 
 .ffrs-nav-half{
-	position:absolute;
-	top:0;
-	left:25%;
-	z-index: 9999;
-	width:50%;
 	border-radius: 0 0 15px 15px;
 }
 
