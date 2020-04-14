@@ -2,6 +2,7 @@ from app.polygon_builder.Rangepoint import Rangepoint
 import json
 from shapely.geometry import Polygon, MultiPolygon
 from math import sin, cos, sqrt, atan2, radians
+import time
 
 
 class Rangearea():
@@ -77,7 +78,8 @@ class Rangearea():
         und auf Gateways, RSSI Bereiche und Cluster aufgeteilt.
         '''
 
-        # print('Start analyse()')
+        start_time = time.time()
+        print('[', 0, ']: ', 'Start analyse()')
 
         # Ermittle Gateways
         #self.gateway_id_list = []
@@ -118,6 +120,10 @@ class Rangearea():
 
             # Schleife über alle Rangepoints:
             c = 0
+        current_time = time.time()
+        diff_time = round(time.time() - start_time, 2)
+        total_time = round(time.time() - start_time, 2)
+        print('[', diff_time, total_time, ']: ', 'Anzahl range_point:', len(self.range_point_list))
             for range_point in self.range_point_list:
 
 
@@ -144,8 +150,11 @@ class Rangearea():
 
                         temp_coords.append([range_point.longitude, range_point.latitude])
 
-            # print('Anzahl Points: ', c)
-            # print('Points per RSSI: ', [len(r['temp_point_list']) for r in self.rssi_area_list])
+        diff_time = round(time.time() - current_time, 2)
+        total_time = round(time.time() - start_time, 2)
+        current_time = time.time()
+        # print('Anzahl Points: ', c)
+        print('[', diff_time, total_time, ']: ', 'Points per RSSI: ', [len(r['temp_point_list']) for r in self.rssi_area_list])
 
             # Hier wird die polygon_list gefüllt, entweder für jeden RSSI Bereich ein Polygon,
             # oder nur ein Polygon mit allen Punkten
@@ -160,8 +169,15 @@ class Rangearea():
 
                     if len(rssi_area['temp_point_list']) > 2:
 
-                        cluster_list = self._cluster_list(rssi_area['temp_point_list'], 300)
-
+                    diff_time = round(time.time() - current_time, 2)
+                    total_time = round(time.time() - start_time, 2)
+                    current_time = time.time()
+                    print('[', diff_time, total_time, ']: ', rssi_area['rssi_min'], '-', rssi_area['rssi_max'])
+                    print('[', diff_time, total_time, ']: ', 'Anzahl temp_point_list:', len(rssi_area['temp_point_list']))
+                    diff_time = round(time.time() - current_time, 2)
+                    total_time = round(time.time() - start_time, 2)
+                    current_time = time.time()
+                    print('[', diff_time, total_time, ']: ', 'Anzahl Cluster:', len(cluster_list))
                         for cluster in cluster_list:
 
                             convex_polygon = None
@@ -205,7 +221,10 @@ class Rangearea():
                             else:
                                 print(type(convex_polygon))
 
-        # print('Anzahl shapely Polygone: ', len(self.shapely_polygon_list))
+        diff_time = round(time.time() - current_time, 2)
+        total_time = round(time.time() - start_time, 2)
+        current_time = time.time()
+        print('[', diff_time, total_time, ']: ', 'Anzahl shapely Polygone: ', len(self.shapely_polygon_list))
         
         for shapely_polygon in self.shapely_polygon_list:
 
@@ -227,7 +246,10 @@ class Rangearea():
                     'coords': temp_coords
                 })
         
-        # print('Anzahl final shapely Polygons: ', len(self.polygon_list))
+        diff_time = round(time.time() - current_time, 2)
+        total_time = round(time.time() - start_time, 2)
+        current_time = time.time()
+        print('[', diff_time, total_time, ']: ', 'Anzahl final shapely Polygons: ', len(self.polygon_list))
 
         '''
         if len(temp_coords) > 2:
