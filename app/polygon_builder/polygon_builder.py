@@ -11,8 +11,6 @@ def run_polygon_builder():
 
     with scheduler.app.app_context():
 
-        print('Start building polygons.')
-
         # Erstmal alle Gatewas holen
         try:
             gateway_list = Gateway.query.all()
@@ -59,7 +57,6 @@ def run_polygon_builder():
 
         # Analyse des Rangearea Objekts starten
         range_area.analyse()   
-        print('Analyse fertig.')
 
         # Nach der Analyse werden die ermittelten Polygone in der Datenbank gespeichert.
         # Dazu wird werden die Datenbanktabellen Polygon und Polygonpoints geleert.
