@@ -94,61 +94,61 @@ class Rangearea():
 
         # Schleife über alle Gateways, dabei wird die polygon_list geleert
         self.polygon_list = []
-        i = 0
-        for gateway in self.gateway_list:
+        # i = 0
+        # for gateway in self.gateway_list:
 
-            # if gateway['gtw_id'] != 'eui-313532352e005300':
-            #    continue
+        # if gateway['gtw_id'] != 'eui-313532352e005300':
+        #    continue
 
-            i += 1
+        # i += 1
 
-            # print('### ', i, gateway['gtw_id'])
+        # print('### ', i, gateway['gtw_id'])
 
-            # Variable für temporäre Koordinaten, 
-            # die benutzt werden wenn alle Punkte in ein Polygon rein kommen (keine RSSI Bereiche).
-            temp_coords = []
+        # Variable für temporäre Koordinaten, 
+        # die benutzt werden wenn alle Punkte in ein Polygon rein kommen (keine RSSI Bereiche).
+        temp_coords = []
 
-            # Prüfen ob es mehrere RSSI Bereiche gibt.
-            rssi_split = False
-            if len(self.rssi_area_list) > 0:
+        # Prüfen ob es mehrere RSSI Bereiche gibt.
+        rssi_split = False
+        if len(self.rssi_area_list) > 0:
 
-                rssi_split = True
+            rssi_split = True
 
-                # Die temporären Koordinaten Listen in rssi_area müssen für jede Gateway entleert werden
-                for rssi_area in self.rssi_area_list:
-                    rssi_area['temp_point_list'] = []
+            # Die temporären Koordinaten Listen in rssi_area müssen für jede Gateway entleert werden
+            # for rssi_area in self.rssi_area_list:
+            #    rssi_area['temp_point_list'] = []
 
-            # Schleife über alle Rangepoints:
-            c = 0
+        # Schleife über alle Rangepoints:
+        c = 0
         current_time = time.time()
         diff_time = round(time.time() - start_time, 2)
         total_time = round(time.time() - start_time, 2)
         print('[', diff_time, total_time, ']: ', 'Anzahl range_point:', len(self.range_point_list))
-            for range_point in self.range_point_list:
+        for range_point in self.range_point_list:
 
 
-                # Nur die Punkte nehemen die zum aktuell selektierten Gateway gehören
-                if range_point.gateway_id == gateway['gtw_id']:
+            # Nur die Punkte nehemen die zum aktuell selektierten Gateway gehören
+            # if range_point.gateway_id == gateway['gtw_id']:
 
-                    c += 1
+                c += 1
 
-                    # Wenn es RSSI Bereiche gibt werden die Punkte auf die RSSI Bereich aufgeteilt
-                    if rssi_split:
+                # Wenn es RSSI Bereiche gibt werden die Punkte auf die RSSI Bereich aufgeteilt
+                if rssi_split:
+                    
+                    # Prüfen in welchen RSSI Bereich der Punkt fällt
+                    for rssi_area in self.rssi_area_list:
                         
-                        # Prüfen in welchen RSSI Bereich der Punkt fällt
-                        for rssi_area in self.rssi_area_list:
+                        if (range_point.rssi >= rssi_area['rssi_min'] and range_point.rssi <= rssi_area['rssi_max']) or range_point.rssi == 0:
+
+                            rssi_area['temp_point_list'].append([range_point.longitude, range_point.latitude])
                             
-                            if (range_point.rssi >= rssi_area['rssi_min'] and range_point.rssi <= rssi_area['rssi_max']) or range_point.rssi == 0:
+                            if range_point.rssi != 0:
+                                break
 
-                                rssi_area['temp_point_list'].append([range_point.longitude, range_point.latitude])
-                                
-                                if range_point.rssi != 0:
-                                    break
+                # Ansonste wird alles in ein Polygon gesteckt 
+                # else:
 
-                    # Ansonste wird alles in ein Polygon gesteckt 
-                    else:
-
-                        temp_coords.append([range_point.longitude, range_point.latitude])
+                    # temp_coords.append([range_point.longitude, range_point.latitude])
 
         diff_time = round(time.time() - current_time, 2)
         total_time = round(time.time() - start_time, 2)
@@ -156,76 +156,80 @@ class Rangearea():
         # print('Anzahl Points: ', c)
         print('[', diff_time, total_time, ']: ', 'Points per RSSI: ', [len(r['temp_point_list']) for r in self.rssi_area_list])
 
-            # Hier wird die polygon_list gefüllt, entweder für jeden RSSI Bereich ein Polygon,
-            # oder nur ein Polygon mit allen Punkten
-            if rssi_split: 
+        # Hier wird die polygon_list gefüllt, entweder für jeden RSSI Bereich ein Polygon,
+        # oder nur ein Polygon mit allen Punkten
+        if rssi_split: 
 
-                # RSSI Bereiche durchgehen und jeweils die Koordinaten raus holen
-                prio = 100
-                for rssi_area in self.rssi_area_list:
+            # RSSI Bereiche durchgehen und jeweils die Koordinaten raus holen
+            prio = 100
+            for rssi_area in self.rssi_area_list:
 
-                    # Priorität nach runterzählen
-                    prio -= 1
+                # Priorität nach runterzählen
+                prio -= 1
 
-                    if len(rssi_area['temp_point_list']) > 2:
+                if len(rssi_area['temp_point_list']) > 2:
 
                     diff_time = round(time.time() - current_time, 2)
                     total_time = round(time.time() - start_time, 2)
                     current_time = time.time()
                     print('[', diff_time, total_time, ']: ', rssi_area['rssi_min'], '-', rssi_area['rssi_max'])
                     print('[', diff_time, total_time, ']: ', 'Anzahl temp_point_list:', len(rssi_area['temp_point_list']))
+                    cluster_list = self._cluster_list(rssi_area['temp_point_list'], 150)
+                    
                     diff_time = round(time.time() - current_time, 2)
                     total_time = round(time.time() - start_time, 2)
                     current_time = time.time()
                     print('[', diff_time, total_time, ']: ', 'Anzahl Cluster:', len(cluster_list))
-                        for cluster in cluster_list:
 
-                            convex_polygon = None
+                    for cluster in cluster_list:
 
-                            try:
+                        convex_polygon = None
+
+                        try:
+                        
+                            # Convexe Hülle generieren, dazu wird mit Shapely ein Polygon erstellt.
+                            # An den Cluster wird noch der Punkt vom Gateway dran gehangen.
+                            # polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
+                            polygon = Polygon(cluster)
+
+                            convex_polygon = polygon.convex_hull
+
+                        except:
+                            print('error in analyse')
+
+                        # Nur das Polygon hinzufügen wenn es auch ein Polygon ist.
+                        if type(convex_polygon) is Polygon:
                             
-                                # Convexe Hülle generieren, dazu wird mit Shapely ein Polygon erstellt.
-                                # An den Cluster wird noch der Punkt vom Gateway dran gehangen.
-                                # polygon = Polygon(cluster + [[gateway['longitude'], gateway['latitude']]])
-                                polygon = Polygon(cluster)
+                            # Das Polygon der shapely_polygon_list hinzufügen
+                            self.shapely_polygon_list.append(
+                                {
+                                    'prio': prio, 
+                                    'polygon': convex_polygon,
+                                    'fill_color': rssi_area['fill_color'],
+                                    'gtw_id': 'eui-313532352e005300'
+                                }
+                            )
+                            '''
+                            elif type(convex_polygon) is MultiPolygon:
 
-                                convex_polygon = polygon.convex_hull
+                                for poly in convex_polygon:
 
-                            except:
-                                print('error in analyse')
-
-                            # Nur das Polygon hinzufügen wenn es auch ein Polygon ist.
-                            if type(convex_polygon) is Polygon:
-                                
-                                # Das Polygon der shapely_polygon_list hinzufügen
-                                self.shapely_polygon_list.append(
+                                    self.shapely_polygon_list.append(
                                     {
                                         'prio': prio, 
-                                        'polygon': convex_polygon,
-                                        'fill_color': rssi_area['fill_color'],
-                                        'gtw_id': gateway['gtw_id']
-                                    }
-                                )
-                                '''
-                                elif type(convex_polygon) is MultiPolygon:
+                                        'polygon': poly,
+                                        'fill_color': rssi_area['fill_color']})
+                            '''
 
-                                    for poly in convex_polygon:
-
-                                        self.shapely_polygon_list.append(
-                                        {
-                                            'prio': prio, 
-                                            'polygon': poly,
-                                            'fill_color': rssi_area['fill_color']})
-                                '''
-
-                            else:
-                                print(type(convex_polygon))
+                        else:
+                            print(type(convex_polygon))
 
         diff_time = round(time.time() - current_time, 2)
         total_time = round(time.time() - start_time, 2)
         current_time = time.time()
         print('[', diff_time, total_time, ']: ', 'Anzahl shapely Polygone: ', len(self.shapely_polygon_list))
         
+        # Hier werden noch die Polygone von einander abgezogen, damit sie sich auf der Karte nicht überlagern.
         for shapely_polygon in self.shapely_polygon_list:
 
             for shapely_polygon1 in self.shapely_polygon_list:
