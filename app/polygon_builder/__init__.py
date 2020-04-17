@@ -4,4 +4,4 @@ import os
 
 bp = Blueprint('polygon_builder', __name__)
 
-run_polygon_builder()
+#run_polygon_builder()
