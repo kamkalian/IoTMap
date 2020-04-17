@@ -7,9 +7,9 @@ import time
 
 class Rangearea():
     '''
-    Mit dieser Klassen kann man mehrere Polygone von einem gemeinsamen Startpunkt aus generieren, 
+    Mit dieser Klassen kann man mehrere Polygone generieren, 
     die dann zur Darstellung z.B. auf einer Leaflet Karte im GeoJson Format abgerufen werden.
-    Der Startpunkt ist z.B. ein Gateway bei dem die Empfangsreichweiten dargestellt werden sollen.
+    Die Polygone stellen z.B. die Empfangsreichweiten eines Gateways dar.
     Mehrere Rangepoints die als Liste übergeben werden, 
     enthalten die GPS Koordinaten und die Empfangsstärke(RSSI) des empfangenen Gateways.
     Weit ausseinander liegende Rangepoint-Wolken werden in seperate Polygone aufgeteilt.
