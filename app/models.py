@@ -90,4 +90,17 @@ class Polygon(db.Model):
     gtw_id = db.Column(db.String(80), db.ForeignKey('gateway.gtw_id'))
     polygon_points = db.relationship('Polygonpoint', backref='polygon')
 
+
+class Log(db.Model):
+
+    log_id = db.Column(db.Integer(), primary_key=True)
+
+    modul = db.Column(db.String(64))
+
+    state = db.Column(db.String(64))
+
+    timestamp = db.Column(db.DateTime())
+
+
+
     
