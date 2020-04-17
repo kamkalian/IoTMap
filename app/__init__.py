@@ -28,10 +28,22 @@ def create_app():
     from app.gateway_sync import bp as gateway_sync_bp
     app.register_blueprint(gateway_sync_bp)
 
+    return app
+
+
+def create_pb_app():
+
+    print('Create Polygon Builder App')
+    app = Flask(__name__)
+    app.config.from_object(Config)
+    app.app_context().push()
+
+    db.init_app(app)
+
     from app.polygon_builder import bp as polygon_builder_bp
     app.register_blueprint(polygon_builder_bp)
 
     return app
-
+    
 
 from app import models
