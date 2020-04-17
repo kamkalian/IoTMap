@@ -1,5 +1,5 @@
 import requests
-from app.models import Gateway, MessageLink, Message, Device, Polygon, Polygonpoint
+from app.models import Gateway, MessageLink, Message, Device, Polygon, Polygonpoint, Log
 from flask import json
 from app import db
 from datetime import datetime, timedelta
@@ -25,6 +25,11 @@ def run_polygon_builder():
     range_area.add_rssi_range(-119, -115, '#00ffff')
     range_area.add_rssi_range(-200, -120, '#0000ff')
 
+    # Heraus finden wann der letzte Lauf durchgeführt wurde
+    last_log = Log.query.filter_by(modul='Polygon Builder', state='start').order_by(Log.timestamp).first()
+
+
+    # Liste für die Rangepoints erstellen
     range_point_list = []
 
     # Alle Gateways durchgehen
@@ -40,16 +45,25 @@ def run_polygon_builder():
 
         for message_link in gateway.message_links:
 
-                range_point = Rangearea.range_point(
-                    message_link.message.latitude,
-                    message_link.message.longitude,
-                    message_link.message.altitude, 
-                        message_link.message.altitude, 
-                    message_link.message.altitude, 
-                    message_link.rssi,
-                    gateway.gtw_id)
+            # Wenn die Message kein datetime Object hat wird sie verworfen.
+            if type(message_link.message.time) != datetime:
+                continue
+            
+            # Messages die vor dem letzten Lauf empfangen wurden werden verworfen.
+            diff_dt = last_log.timestamp - message_link.message.time
+            diff = diff_dt.seconds + diff_dt.days * 24 * 3600
+            # print(message_link.message.time, diff)
+            if diff > 0:
+                continue
 
-                range_point_list.append(range_point)
+            range_point = Rangearea.range_point(
+                message_link.message.latitude,
+                message_link.message.longitude,
+                message_link.message.altitude, 
+                message_link.rssi,
+                gateway.gtw_id)
+
+            range_point_list.append(range_point)
 
     # Die erstellte range_point_list dem range_area Objekt hinzufügen
     range_area.add_range_point_list(range_point_list)
@@ -87,4 +101,4 @@ def run_polygon_builder():
 
 
     print('Alle Polygone gespeichert.')
-        
+
