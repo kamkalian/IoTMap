@@ -99,6 +99,12 @@ def run_polygon_builder():
 
         db.session.commit()
 
-
+    print('''
+    ####    ####    #####    ########   ##   ####
+    ##      ##      ##  ##      ##      ##  ##
+    ####    ####    ####        ##      ##  ##  ###
+    ##      ##      ##  #       ##      ##  ##   ##
+    ##      ####    ##  ##      ##      ##   #####
+    ''')
     print('Alle Polygone gespeichert.')
 
