@@ -76,7 +76,7 @@ def run_polygon_builder():
     range_area.analyse() 
 
     # Nach der Analyse werden die ermittelten Polygone in der Datenbank gespeichert.
-    # Dazu wird werden die Datenbanktabellen Polygon und Polygonpoints geleert.
+        # Dazu werden erstmal die Datenbanktabellen Polygon und Polygonpoints geleert.
     Polygonpoint.query.delete()
     Polygon.query.delete()
     db.session.commit()
