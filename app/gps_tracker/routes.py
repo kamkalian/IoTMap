@@ -3,7 +3,7 @@ from flask import request
 import json
 from app.models import Gateway, MessageLink, Message, Device
 from app import db
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 @bp.route('/receive_uplink', methods=['POST'])
@@ -25,7 +25,7 @@ def receive_upink():
 
     # datetime erstellen
     time_str = msg_dict['time'].split('.')
-    time_dt = datetime.strptime(time_str[0], '%Y-%m-%dT%H:%M:%S')
+    time_dt = datetime.strptime(time_str[0], '%Y-%m-%dT%H:%M:%S') + timedelta(hours=2)
     time_str = time_dt.strftime('%Y-%m-%d %H:%M:%S')
 
     # Message in die Datenbank schreiben
