@@ -53,6 +53,7 @@ def run_polygon_builder():
                 continue
             
             # Messages die vor dem letzten Lauf empfangen wurden werden verworfen.
+            if last_log != None:    
             diff_dt = last_log.timestamp - message_link.message.time
             diff = diff_dt.seconds + diff_dt.days * 24 * 3600
             # print(message_link.message.time, diff)
