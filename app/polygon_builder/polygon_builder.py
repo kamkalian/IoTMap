@@ -112,3 +112,6 @@ def run_polygon_builder():
         print('### Fertig ###')
     print('Alle Polygone gespeichert.')
 
+    else:
+        print('Zu wenige neue Punkte vorhanden: ', len(range_point_list))
+
