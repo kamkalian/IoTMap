@@ -103,12 +103,12 @@ def run_polygon_builder():
 
         db.session.commit()
 
-    print('''
-    ####    ####    #####    ########   ##   ####
-    ##      ##      ##  ##      ##      ##  ##
-    ####    ####    ####        ##      ##  ##  ###
-    ##      ##      ##  #       ##      ##  ##   ##
-    ##      ####    ##  ##      ##      ##   #####
-    ''')
+        # Log Eintrag hinzufügen
+        current_dt = datetime.now()
+        new_log = Log(modul='Polygon Builder', state='end', timestamp=current_dt.strftime("%Y-%m-%d %H:%M:%S"))
+        db.session.add(new_log)
+        db.session.commit()
+
+        print('### Fertig ###')
     print('Alle Polygone gespeichert.')
 
