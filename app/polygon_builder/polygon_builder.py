@@ -7,6 +7,10 @@ from app.polygon_builder.Rangearea import Rangearea
 
 
 def run_polygon_builder():
+    '''
+    Holt die Messages aus der Datenbank. 
+    Anschließend wird die Analyse gestartet, bei der neue Polygone ermittelt werden
+    '''
 
     # Erstmal alle Gatewas holen
     try:
