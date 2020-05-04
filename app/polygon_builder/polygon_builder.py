@@ -32,10 +32,6 @@ def run_polygon_builder():
     range_area.add_rssi_range(-119, -115, '#00ffff')
     range_area.add_rssi_range(-200, -120, '#0000ff')
 
-    # Heraus finden wann der letzte Lauf durchgeführt wurde
-    last_log = Log.query.filter_by(modul='Polygon Builder', state='start').order_by(Log.timestamp).first()
-
-
     # Liste für die Rangepoints erstellen
     range_point_list = []
 
