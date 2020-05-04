@@ -12,7 +12,10 @@ def run_polygon_builder():
     Anschließend wird die Analyse gestartet, bei der neue Polygone ermittelt werden
     '''
 
-    # Erstmal alle Gatewas holen
+    # Heraus finden wann der letzte Lauf durchgeführt wurde
+    last_log = Log.query.filter_by(modul='Polygon Builder', state='start').order_by(Log.timestamp.desc()).first()
+
+    # alle Gatewas holen
     try:
         gateway_list = Gateway.query.all()
     except:
