@@ -54,11 +54,11 @@ def run_polygon_builder():
             
             # Messages die vor dem letzten Lauf empfangen wurden werden verworfen.
             if last_log != None:    
-            diff_dt = last_log.timestamp - message_link.message.time
-            diff = diff_dt.seconds + diff_dt.days * 24 * 3600
-            # print(message_link.message.time, diff)
-            if diff > 0:
-                continue
+                diff_dt = last_log.timestamp - message_link.message.time
+                diff = diff_dt.seconds + diff_dt.days * 24 * 3600
+                # print(message_link.message.time, diff)
+                if diff > 0:
+                    continue
 
             range_point = Rangearea.range_point(
                 message_link.message.latitude,
@@ -69,39 +69,81 @@ def run_polygon_builder():
 
             range_point_list.append(range_point)
 
-    # Die erstellte range_point_list dem range_area Objekt hinzufügen
-    range_area.add_range_point_list(range_point_list)
+    '''
+    Da wir jetzt nur noch die zuletzt reingekommenden Punkte verarbeiten, müssen 
+    die schon erstellenten Polygone mit in die Analyse einfließen.
+    Dazu werden hier aus den Polygonen die Punkte extrahiert und daraus dann range_points gebaut.
+    '''
+    if len(range_point_list) > 20:
 
-    # Analyse des Rangearea Objekts starten
-    range_area.analyse() 
-
-    # Nach der Analyse werden die ermittelten Polygone in der Datenbank gespeichert.
-        # Dazu werden erstmal die Datenbanktabellen Polygon und Polygonpoints geleert.
-    Polygonpoint.query.delete()
-    Polygon.query.delete()
-    db.session.commit()
-    
-    for polygon in range_area.polygon_list:
-
-        new_polygon = Polygon(
-            gtw_id=polygon['gtw_id'],
-            fill_color=polygon['fill_color']
-        )
-        
-        db.session.add(new_polygon)
+        # Log Eintrag hinzufügen
+        current_dt = datetime.now()
+        new_log = Log(modul='Polygon Builder', state='start', timestamp=current_dt.strftime("%Y-%m-%d %H:%M:%S"))
+        db.session.add(new_log)
         db.session.commit()
 
-        for point in polygon['coords']:
+        polygon_points = Polygonpoint.query.all()
+        for pp in polygon_points:
 
-            new_polygonpoint = Polygonpoint(
-                latitude=point[1],
-                longitude=point[0],
-                polygon_id=new_polygon.poly_id
+            # Ein kleines Mapping zwichen RSSI und der fill_color
+            rssi = None
+            if pp.polygon.fill_color == '#ff0000':
+                rssi = -50
+            if pp.polygon.fill_color == '#FF7F00':
+                rssi = -102
+            if pp.polygon.fill_color == '#ffff00':
+                rssi = -107
+            if pp.polygon.fill_color == '#00ff00':
+                rssi = -112
+            if pp.polygon.fill_color == '#00ffff':
+                rssi = -117
+            if pp.polygon.fill_color == '#0000ff':
+                rssi = -198
+            if rssi == None:
+                continue
+
+            range_point = Rangearea.range_point(
+                pp.latitude,
+                pp.longitude,
+                0, 
+                rssi,
+                'eui-313532352e005300')
+
+            range_point_list.append(range_point)
+
+        # Die erstellte range_point_list dem range_area Objekt hinzufügen
+        range_area.add_range_point_list(range_point_list)
+
+        # Analyse des Rangearea Objekts starten
+        range_area.analyse() 
+
+        # Nach der Analyse werden die ermittelten Polygone in der Datenbank gespeichert.
+        # Dazu werden erstmal die Datenbanktabellen Polygon und Polygonpoints geleert.
+        Polygonpoint.query.delete()
+        Polygon.query.delete()
+        db.session.commit()
+        
+        for polygon in range_area.polygon_list:
+
+            new_polygon = Polygon(
+                gtw_id=polygon['gtw_id'],
+                fill_color=polygon['fill_color']
             )
             
-            db.session.add(new_polygonpoint)
+            db.session.add(new_polygon)
+            db.session.commit()
 
-        db.session.commit()
+            for point in polygon['coords']:
+
+                new_polygonpoint = Polygonpoint(
+                    latitude=point[1],
+                    longitude=point[0],
+                    polygon_id=new_polygon.poly_id
+                )
+                
+                db.session.add(new_polygonpoint)
+
+            db.session.commit()
 
         # Log Eintrag hinzufügen
         current_dt = datetime.now()
@@ -110,7 +152,7 @@ def run_polygon_builder():
         db.session.commit()
 
         print('### Fertig ###')
-    print('Alle Polygone gespeichert.')
+        print('Alle Polygone gespeichert.')
 
     else:
         print('Zu wenige neue Punkte vorhanden: ', len(range_point_list))
