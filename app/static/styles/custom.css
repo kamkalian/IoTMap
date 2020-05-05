@@ -16,3 +16,11 @@ body {
   -webkit-filter: grayscale(50%);
   filter: grayscale(50%);
 }
+
+.leaflet-popup-content {
+	margin: 0;
+}
+
+.leaflet-popup-content-wrapper{
+	padding: 0;
+}
