@@ -85,17 +85,17 @@
                 })
                 .setLatLng(latlng)
                 .setContent(
-                    `<div class="card">
-                    <div class="card-body">
+                    `<div class="card bg-dark text-white">
+                    <div class="card-body pb-0">
                         <h5 class="card-title">`+id+`</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">`+description+`</h6>
+                        <h6 class="card-subtitle mb-2">`+description+`</h6>
                         <table class="table mt-4">
-                            <tr><th>Eigentümer</th><td>`+owner+`</td></tr>
-                            <tr><th>Gateway Modell</th><td>`+model+`</td></tr>
-                            <tr><th>Gateway Hersteller</th><td>`+brand+`</td></tr>
-                            <tr><th>Antenne</th><td>`+antenna_model+`</td></tr>
-                            <tr><th>Standort</th><td>`+placement+`</td></tr>
-                            <tr><th>Koordinaten</th><td>`+latlng.lat+`, `+latlng.lng+`</td></tr>
+                            <tr><th class="py-1 px-0">Eigentümer</th><td class="py-1 pr-0">`+owner+`</td></tr>
+                            <tr><th class="py-1 px-0">Gateway Modell</th><td class="py-1 pr-0">`+model+`</td></tr>
+                            <tr><th class="py-1 px-0">Gateway Hersteller</th><td class="py-1 pr-0">`+brand+`</td></tr>
+                            <tr><th class="py-1 px-0">Antenne</th><td class="py-1 pr-0">`+antenna_model+`</td></tr>
+                            <tr><th class="py-1 px-0">Standort</th><td class="py-1 pr-0">`+placement+`</td></tr>
+                            <tr><th class="py-1 px-0">Koordinaten</th><td class="py-1 pr-0">`+latlng.lat+`, `+latlng.lng+`</td></tr>
                         </table>
                         
                     </div>
