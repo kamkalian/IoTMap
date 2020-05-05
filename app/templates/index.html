@@ -145,6 +145,53 @@
             }
         }
     }).addTo(map);
+
+
+    /*
+    Kreise für jedes Gateway zeichnen
+    */
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 5, 
+                    zIndexOffset: 50,
+                     
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
+
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 1000, 
+                    zIndexOffset: 50,
+                    weight: 1,
+                    opacity: 0.5,
+                    fillOpacity: 0.1, 
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
+
+    L.geoJSON(geo_json, { 
+    	pointToLayer: function (feature, latlng) {
+            var gw_state = feature.properties.gw_state;
+            if(gw_state=='online'){
+                return L.circle(latlng, {
+                    radius: 2000, 
+                    zIndexOffset: 50,
+                    weight: 1,
+                    opacity: 0.5,
+                    fillOpacity: 0.1, 
+                    color: '#0d83d0'});
+            }
+        }
+    }).addTo(map);
     
 
     /*
