@@ -79,7 +79,9 @@
             var placement = feature.properties.placement;
             var gw_state = feature.properties.gw_state;
 
-            var popup = L.popup()
+            var popup = L.popup({
+                    autoPanPaddingTopLeft: [0, 100]
+                    
                 .setLatLng(latlng)
                 .setContent(
                     `<div class="card">
