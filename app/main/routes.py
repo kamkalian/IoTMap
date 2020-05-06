@@ -152,9 +152,9 @@ def log():
         # letzte Messages aus der Datenbank holen
         last_messages = Message.query.order_by(Message.time.desc()).limit(50).all()
 
-        for message in last_messages:
-            new_time = message.time + + timedelta(seconds=7200)
-            message.time = new_time
+        # for message in last_messages:
+            # new_time = message.time + + timedelta(seconds=7200)
+            # message.time = new_time
             #print(message.time, new_time)
 
     except:
