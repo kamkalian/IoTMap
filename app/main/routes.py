@@ -29,6 +29,27 @@ def index():
     except:
         return """Datenbank Fehler!"""
 
+    # Messages holen
+    message_list = Message.query.all()
+    
+    # GeoJson von den Messages erstellen
+    geo_json_messages = { 'type': 'FeatureCollection' }
+    features = []
+    
+    for message in message_list:
+        # feature aus allen Daten zusammensetzen und dem features dict hinzufügen
+            feature = { 
+                'type': 'Feature', 
+                'geometry': {'type': 'Point', 'coordinates': [message.longitude, message.latitude] },
+                'properties': {
+                    'id': message.dev_id, 
+                    'time': message.time,
+                    },
+            }
+            features.append(feature)
+    
+    geo_json_messages['features'] = features
+    
     # GeoJSON erstellen
     geo_json = { 'type': 'FeatureCollection' }
     features = []
@@ -103,6 +124,7 @@ def index():
         title=u'FFRS-TTN-Map',
         geo_json=json.dumps(geo_json),
         geo_json_polys=range_area.geo_json(),
+        geo_json_messages=json.dumps(geo_json_messages),
         site='index')
 
 
