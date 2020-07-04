@@ -7,10 +7,10 @@
 <script>
 
     // parst das übergebene geo_json in eine javascript variable
-	var geo_json = JSON.parse({{ geo_json|tojson|safe }})
+	var geo_json = JSON.parse({{ geo_json|tojson|safe }});
 
     // parst das übergebene geo_json für Polygone in eine javascript variable
-	var geo_json_polys = JSON.parse({{ geo_json_polys|tojson|safe }})
+    var geo_json_polys = JSON.parse({{ geo_json_polys|tojson|safe }});
     
     // Layer mit verschiedenen Tiles erstellen
 	var osm   = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
