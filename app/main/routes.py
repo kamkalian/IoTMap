@@ -169,3 +169,9 @@ def log():
 def impressum():
     """Route zum Impressum"""
     return render_template("impressum.html", title=u"Impressum", site="impressum")
+
+
+@bp.route('/datenschutz')
+def datenschutz():
+    """Route zur Datenschutzerklärung"""
+    return render_template("datenschutz.html", title=u"Datenschutz", site="datenschutz")
