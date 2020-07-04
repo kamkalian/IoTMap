@@ -5,7 +5,7 @@ from app.main import bp
 import requests
 from datetime import datetime, timedelta
 from app.models import Gateway, MessageLink, Message, Device
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 from app.polygon_builder.Rangearea import Rangearea
 
 
@@ -30,7 +30,7 @@ def index():
         return """Datenbank Fehler!"""
 
     # Messages holen
-    message_list = Message.query.all()
+    message_list = Message.query.order_by(desc(Message.time)).limit(1000).all()
     
     # GeoJson von den Messages erstellen
     geo_json_messages = { 'type': 'FeatureCollection' }
