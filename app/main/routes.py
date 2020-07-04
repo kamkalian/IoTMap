@@ -163,3 +163,9 @@ def log():
     return render_template(
         'log.html',
         title=u'Log', last_messages=last_messages, site='log')
+
+
+@bp.route('/impressum')
+def impressum():
+    """Route zum Impressum"""
+    return render_template("impressum.html", title=u"Impressum", site="impressum")
