@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+<div class="container mt-3">
+    <h1>Datenschutzerklärung</h1>
+    <hr>
+    <h2>Wer ich bin</h2>
+    <p>Mein Name ist Andreas Kurm und ich helfe mit ein freies Netz für alle in Troisdorf und Umgebung aufzubauen.<br>
+    Dazu zählt auch das LoRaWan Netzwerk.<br>Für eine Übersicht aller Gateways (im Umkreis 25km) betreibe ich diese Webseite<br> unter der Adresse: https://ffrs-ttn-map.de<br>
+    Detailliertere Informationen und meine Kontaktdaten findet Ihr im <a href="{{ url_for('main.impressum') }}">Impressum</a></p>
+
+    <h2>Welche personenbezogenen Daten werden gesammelt?</h2>
+    <p>Diese Seite sammelt <u>keine</u> Daten der Besucher.</p>
+
+    <h2>Cookies</h2>
+    <p>Es werden keine Cookies verwendet oder gespeichert.</p>
+
+    <h3>Eingebettete Inhalte von anderen Websites</h3>
+    <p>Die Map ist eine leaflet Karte, die sich das Kartenmaterial von OpenStreetMap lädt.
+        Dadurch können Daten wie z.B. deine IP Adresse übermittelt werden.
+    </p>
+
+    <h3>Analysedienste</h3>
+        <p>Es laufen <u>keine</u> Analysedienste, wie z.B. Google Analytics.</p>
+</div>
+
+
+
+{% endblock %}
