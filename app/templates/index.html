@@ -12,6 +12,9 @@
     // parst das übergebene geo_json für Polygone in eine javascript variable
     var geo_json_polys = JSON.parse({{ geo_json_polys|tojson|safe }});
     
+    // parst das übergebene geo_json für Polygone in eine javascript variable
+    var geo_json_messages = JSON.parse({{ geo_json_messages|tojson|safe }});
+    
     // Layer mit verschiedenen Tiles erstellen
 	var osm   = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -210,7 +213,23 @@
         }
     });
 
+    /*
+    Zeichne Punkte für die Messages
+    */
+    var message_points = L.geoJSON(geo_json_messages, {
+    	pointToLayer: function(feature, latlng) {
+            return L.circle(latlng, {
+                radius: 5, 
+                zIndexOffset: 50,
+                weight: 1,
+                opacity: 1,
+                fillOpacity: 1, 
+                color: '#ff0000'});
+        }
+    });
+
     var range_layer = L.layerGroup([range_poly]);
+    var messages_layer = L.layerGroup([message_points]);
 
 
     map.setView(new L.LatLng(50.814903908, 7.156198025), 12);
@@ -220,10 +239,13 @@
     };
 
     var overlayMaps = {
-        "range_layer": range_layer
+        "messages_layer": messages_layer,
+        //"range_layer": range_layer
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
+
+    messages_layer.addTo(map);
 
 </script>
 {% endblock %}
