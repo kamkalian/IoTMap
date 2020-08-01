@@ -6,6 +6,7 @@ import requests
 from datetime import datetime, timedelta
 from app.models import Gateway, MessageLink, Message, Device
 from sqlalchemy import and_, desc
+from app.main.grid_view_preparation import GridViewPreparation
 
 
 @bp.route('/')
@@ -14,6 +15,8 @@ def index():
     '''
     Route für die Startseite.
     '''
+    # Messages für GridView preperieren
+    gvp = GridViewPreparation()
 
     # troisdorf 50.820329, 7.141111
     center_lat = '50.820329'
