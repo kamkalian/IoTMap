@@ -24,10 +24,10 @@ class GridViewPreparation():
     def u_earth(self, lat):
         """Umfang der Erde in abhängigkeit vom Breitengrad(Latitude) ausrechnen"""
         # Formel R = √ [ (r1² * cos(B))² + (r2² * sin(B))² ] / [ (r1 * cos(B))² + (r2 * sin(B))² ] 
-        u_earth_tmp = (self.r_equator^2 * cos(lat))^2
-        u_earth_tmp1 = (self.r_pole^2 * sin(lat))^2
-        u_earth_tmp2 = (self.r_equator * cos(lat))^2
-        u_earth_tmp3 = (self.r_pole * sin(lat))^2
+        u_earth_tmp = (self.r_equator**2 * cos(lat))**2
+        u_earth_tmp1 = (self.r_pole**2 * sin(lat))**2
+        u_earth_tmp2 = (self.r_equator * cos(lat))**2
+        u_earth_tmp3 = (self.r_pole * sin(lat))**2
 
         u_earth = ((u_earth_tmp + u_earth_tmp1) / (u_earth_tmp2 + u_earth_tmp3)) * pi
 
