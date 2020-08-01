@@ -1,4 +1,4 @@
-from math import pi, cos, radians, sin, sqrt, pi
+from math import pi, cos, radians, sin, sqrt, pi, fmod
 from app.models import MessageLink, Message
 
 
@@ -48,70 +48,38 @@ class GridViewPreparation():
 
         self.message_link_list = []
         for message_link in message_link_query_result:
-
             gtw_id = message_link[0]
             rssi = message_link[1]
             lat = float(message_link[2])
             lon = float(message_link[3])
             dev_id = message_link[4]
-            print(dev_id)
+            time = message_link[5]
 
-            # TODO lat und lon beschneiden, so das alle Punkte ein Raster bilden.
+            # Latitude beschneiden
+            trimmed_lat = lat - fmod(lat, self.lat_step)
 
-            # Dict zusammenbauen
-            # TODO bei doppelten Einträgen braucht es eine extra Behandlung
-    
-            lat_dict = None
-            lon_dict = None
-            gtw_dict = None
-            if lat in self.message_link_dict:
-                lat_dict = self.message_link_dict[lat]
-            if lat_dict and lon in lat_dict:
-                lon_dict = lat_dict[lon]
-            if lon_dict and gtw_id in lon_dict:
-                gtw_dict = lon_dict[gtw_id]
-            
-            if gtw_dict and rssi < gtw_dict['rssi']:
-                gtw_dict['rssi'] = rssi
-            
-            if lon_dict and not gtw_dict:
-                print(lon_dict)
-                lon_dict[gtw_id] = {
-                            "rssi": rssi,
-                            "dev_id": dev_id
-                        }
+            # Step für Longitude bestimmen und dann damit die Longitude trimmen            
+            lon_step = self.lon_step(trimmed_lat)
+            trimmed_lon = lon - fmod(lon, lon_step)
 
-            if lat_dict and lon_dict and gtw_dict:
-                pass
-            else:
-                self.message_link_dict[lat] = {
-                    lon: {
-                        gtw_id: {
-                            "rssi": message_link[1],
-                            "dev_id": message_link[4]
-                        }
-                    }
+            # List mit Messages als Dict zusammenbauen,
+            # dabei wird geschaut ob es doppelte Koordinaten gibt.
+            equal_item = None
+            for item in self.message_link_list:
+                if item.get('lat', 0) == trimmed_lat and item.get('lon', 0) == trimmed_lon:
+                    equal_item = item
+
+            if not equal_item:     
+                item_dict = {
+                    "lat": trimmed_lat,
+                    "lon": trimmed_lon,
+                    "rssi": rssi,
+                    "time": time
                 }
-
-        for lat in self.message_link_dict:
-            print(lat)
-            for lon in self.message_link_dict[lat]:
-                print("   ", lon)
-                for gtw_id in self.message_link_dict[lat][lon]:
-                    print("      ", gtw_id)
-                    print("         ", 
-                        self.message_link_dict[lat][lon][gtw_id]['rssi'],
-                        self.message_link_dict[lat][lon][gtw_id]['dev_id']
-                        )
-            
-
-
-    def join_messages(self):
-        pass
-
-
-    def cut_lon(self, lon, meters):
-        pass
+                self.message_link_list.append(item_dict)
+            else:
+                if time > equal_item.get("time", 0):
+                    equal_item.update({"rssi": rssi})
 
 
     def lon_step(self, lat):
