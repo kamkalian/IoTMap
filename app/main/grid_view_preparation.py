@@ -6,8 +6,8 @@ class GridViewPreparation():
 
 
     def __init__(self):
-        self.r_equator = 6378,137
-        self.r_pole = 6356,752
+        self.r_equator = 6378.137
+        self.r_pole = 6356.752
 
         # Entfernung um einen gemessenen Punkt
         self.distance_in_a_circle = 10
