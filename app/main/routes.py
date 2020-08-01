@@ -5,8 +5,7 @@ from app.main import bp
 import requests
 from datetime import datetime, timedelta
 from app.models import Gateway, MessageLink, Message, Device
-from sqlalchemy import and_, desc
-from app.polygon_builder.Rangearea import Rangearea
+from sqlalchemy import and_
 
 
 @bp.route('/')
@@ -82,48 +81,11 @@ def index():
         
 
     geo_json['features'] = features
-
-    # Ein Rangearea Object anlegen
-    range_area = Rangearea()
-
-    # RSSI Bereiche definieren
-    range_area.add_rssi_range(-99, 0, '#ff0000')
-    range_area.add_rssi_range(-104, -100, '#FF7F00')
-    range_area.add_rssi_range(-109, -105, '#ffff00')
-    range_area.add_rssi_range(-114, -110, '#00ff00')
-    range_area.add_rssi_range(-119, -115, '#00ffff')
-    range_area.add_rssi_range(-200, -120, '#0000ff')
     
-
-    # Alle Gateways durchgehen
-    for gateway in gateway_list:
-
-        polygon_list = []
-
-        # Gateway hinzufügen
-        range_area.add_gateway(
-            gateway.gtw_id,
-            gateway.latitude,
-            gateway.longitude)
-
-        for polygon_db in gateway.polygons:
-
-            coords = []
-            for polygon_point_db in polygon_db.polygon_points:
-                coords.append([polygon_point_db.longitude, polygon_point_db.latitude])
-        
-            range_area.add_polygon(
-                gateway.gtw_id,
-                polygon_db.fill_color,
-                coords
-            )
-
-
     return render_template(
         'index.html',
         title=u'FFRS-TTN-Map',
         geo_json=json.dumps(geo_json),
-        geo_json_polys=range_area.geo_json(),
         geo_json_messages=json.dumps(geo_json_messages),
         site='index')
 
