@@ -42,7 +42,8 @@ class GridViewPreparation():
             MessageLink.rssi,
             Message.latitude, 
             Message.longitude,
-            Message.dev_id
+            Message.dev_id,
+            Message.time
             ).all()
 
         self.message_link_list = []
