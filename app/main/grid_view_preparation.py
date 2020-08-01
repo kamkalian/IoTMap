@@ -45,7 +45,7 @@ class GridViewPreparation():
             Message.dev_id
             ).all()
 
-        self.message_link_dict = {}
+        self.message_link_list = []
         for message_link in message_link_query_result:
 
             gtw_id = message_link[0]
