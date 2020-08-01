@@ -5,7 +5,7 @@ from app.main import bp
 import requests
 from datetime import datetime, timedelta
 from app.models import Gateway, MessageLink, Message, Device
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 
 
 @bp.route('/')
