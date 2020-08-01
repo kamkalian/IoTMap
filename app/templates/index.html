@@ -8,9 +8,6 @@
 
     // parst das übergebene geo_json in eine javascript variable
 	var geo_json = JSON.parse({{ geo_json|tojson|safe }});
-
-    // parst das übergebene geo_json für Polygone in eine javascript variable
-    var geo_json_polys = JSON.parse({{ geo_json_polys|tojson|safe }});
     
     // parst das übergebene geo_json für Polygone in eine javascript variable
     var geo_json_messages = JSON.parse({{ geo_json_messages|tojson|safe }});
@@ -198,20 +195,6 @@
             }
         }
     }).addTo(map);
-    
-
-    /*
-    Zeichne Polygone, die die gemessenen Punkte auf der Karte darstellen
-    */
-    var range_poly = L.geoJSON(geo_json_polys, {
-    	style(feature) {
-            return {
-                fillColor: feature.fill_color,
-                opacity: 0,
-                fillOpacity: 0.5
-            };
-        }
-    });
 
     /*
     Zeichne Punkte für die Messages
@@ -228,7 +211,7 @@
         }
     });
 
-    var range_layer = L.layerGroup([range_poly]);
+
     var messages_layer = L.layerGroup([message_points]);
 
 
@@ -240,7 +223,6 @@
 
     var overlayMaps = {
         "messages_layer": messages_layer,
-        //"range_layer": range_layer
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
