@@ -79,12 +79,12 @@ def ttn_sync(center_lat, center_lon, distance):
             tolerance = 0.001
             
             # Latitude
-            if lat and ( gw_db.latitude == None or ( think_positive(gw_db.latitude - lat) > tolerance ) ):
+            if lat and ( gw_db.latitude == None or ( think_positive(float(gw_db.latitude) - float(lat)) > tolerance ) ):
                 gw_db.latitude = lat
                 is_updated = True
 
             # Longitude
-            if lon and ( gw_db.longitude == None or ( think_positive(gw_db.longitude - lon) > tolerance ) ):
+            if lon and ( gw_db.longitude == None or ( think_positive(float(gw_db.longitude) - float(lon)) > tolerance ) ):
                 gw_db.longitude = lon
                 is_updated = True
 
