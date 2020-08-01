@@ -50,8 +50,8 @@ class GridViewPreparation():
 
             gtw_id = message_link[0]
             rssi = message_link[1]
-            lat = message_link[2]
-            lon = message_link[3]
+            lat = float(message_link[2])
+            lon = float(message_link[3])
             dev_id = message_link[4]
             print(dev_id)
 
