@@ -78,9 +78,10 @@ class GridViewPreparation():
                     "time": time
                 }
                 self.message_link_list.append(item_dict)
-            else:
-                new_rssi = (equal_item.get("rssi", 0) + rssi) / 2
-                equal_item.update({"rssi": new_rssi})
+            else:                
+                old_rssi = equal_item.get("rssi", 0)
+                if rssi > old_rssi:
+                    equal_item.update({"rssi": rssi})
 
 
     def lon_step(self, lat):
