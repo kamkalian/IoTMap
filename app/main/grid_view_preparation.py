@@ -10,7 +10,7 @@ class GridViewPreparation():
         self.r_pole = 6356.752
 
         # Entfernung um einen gemessenen Punkt
-        self.distance_in_a_circle = 10
+        self.distance_in_a_circle = 5
 
         # Entfernung zwischen den Breitenkreisen
         self.distance_circle_of_width = 111300
