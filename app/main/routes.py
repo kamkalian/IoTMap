@@ -17,6 +17,7 @@ def index():
     '''
     # Messages für GridView preperieren
     gvp = GridViewPreparation()
+    geo_json_grid_view = gvp.geo_json()
 
     # troisdorf 50.820329, 7.141111
     center_lat = '50.820329'
@@ -90,6 +91,7 @@ def index():
         title=u'FFRS-TTN-Map',
         geo_json=json.dumps(geo_json),
         geo_json_messages=json.dumps(geo_json_messages),
+        geo_json_grid_view=json.dumps(geo_json_grid_view),
         site='index')
 
 
