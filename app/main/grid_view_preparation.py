@@ -16,7 +16,7 @@ class GridViewPreparation():
         self.distance_circle_of_width = 111300
 
         # Schritt für Latitude mit angegebener distance_in_a_circle
-        self.lat_step = self.distance_in_a_circle / self.distance_circle_of_width
+        self.lat_step = self.distance_in_a_circle / self.distance_circle_of_width *2
 
         self.load_messages()
 
