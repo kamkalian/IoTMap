@@ -88,5 +88,5 @@ class GridViewPreparation():
         
         Dabei ist der Umfang der Erde wiederum abhängig von der Latitude des Punktes.
         """
-        lon_step = (360 * self.distance_in_a_circle) / self.u_earth(lat)
+        lon_step = (360 * self.distance_in_a_circle) / self.u_earth(lat)*10
         return lon_step
