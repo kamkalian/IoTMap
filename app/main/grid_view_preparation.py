@@ -89,4 +89,45 @@ class GridViewPreparation():
         Dabei ist der Umfang der Erde wiederum abhängig von der Latitude des Punktes.
         """
         lon_step = (360 * self.distance_in_a_circle) / self.u_earth(lat)*10
+        print(lon_step)
         return lon_step
+
+
+    def geo_json(self):
+        """Gibt von den konsolidierten Messages ein GeoJson zurück"""
+        geo_json = { 'type': 'FeatureCollection' }
+        features = []
+
+        for item in self.message_link_list:
+
+            # Farben über den RSSI Wert festlegen
+            rssi = item["rssi"]
+            color = "#999999"
+            if rssi <= 0 and rssi > -99:
+                color = "#FF0000"
+            if rssi <= -99 and rssi > -104:
+                color = "#FF7F00"
+            if rssi <= -104 and rssi > -109:
+                color = "#FFFF00"
+            if rssi <= -109 and rssi > -114:
+                color = "#00FF00"
+            if rssi <= -114 and rssi > -119:
+                color = "#00FFFF"
+            if rssi <= -114 and rssi > -200:
+                color = "#0000FF"
+
+            # feature aus allen Daten zusammensetzen und dem features dict hinzufügen
+            feature = { 
+                'type': 'Feature', 
+                'geometry': {'type': 'Point', 'coordinates': [item["lon"], item["lat"]] },
+                'properties': {
+                    'time': item["time"],
+                    'rssi': rssi,
+                    'color': color,
+                    },
+            }
+            features.append(feature)
+    
+        geo_json['features'] = features
+
+        return geo_json
