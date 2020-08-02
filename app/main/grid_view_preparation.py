@@ -11,7 +11,7 @@ class GridViewPreparation():
         self.r_pole = 6356.752
 
         # Entfernung um einen gemessenen Punkt
-        self.distance_in_a_circle = 5
+        self.distance_in_a_circle = 10
 
         # Entfernung zwischen den Breitenkreisen
         self.distance_circle_of_width = 111300
@@ -90,7 +90,6 @@ class GridViewPreparation():
         Dabei ist der Umfang der Erde wiederum abhängig von der Latitude des Punktes.
         """
         lon_step = (360 * self.distance_in_a_circle) / self.u_earth(lat)*10
-        print(lon_step)
         return lon_step
 
 
