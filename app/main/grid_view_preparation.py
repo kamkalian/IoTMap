@@ -1,5 +1,6 @@
 from math import pi, cos, radians, sin, sqrt, pi, fmod
 from app.models import MessageLink, Message
+from sqlalchemy import desc
 
 
 class GridViewPreparation():
