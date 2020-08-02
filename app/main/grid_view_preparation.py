@@ -44,7 +44,7 @@ class GridViewPreparation():
             Message.longitude,
             Message.dev_id,
             Message.time
-            ).order_by(Message.time).limit(20000).all()
+            ).order_by(desc(Message.time)).limit(20000).all()
 
         self.message_link_list = []
         for message_link in message_link_query_result:
