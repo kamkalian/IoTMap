@@ -57,11 +57,11 @@ class GridViewPreparation():
             time = message_link[5]
 
             # Latitude beschneiden
-            trimmed_lat = lat - fmod(lat, self.lat_step)
+            trimmed_lat = lat - fmod(lat, self.lat_step) + (self.lat_step/2)
 
             # Step für Longitude bestimmen und dann damit die Longitude trimmen            
             lon_step = self.lon_step(trimmed_lat)
-            trimmed_lon = lon - fmod(lon, lon_step)
+            trimmed_lon = lon - fmod(lon, lon_step) + (lon_step/2)
 
             # List mit Messages als Dict zusammenbauen,
             # dabei wird geschaut ob es doppelte Koordinaten gibt.
