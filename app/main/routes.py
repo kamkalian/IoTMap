@@ -9,6 +9,43 @@ from sqlalchemy import and_, desc
 from app.main.grid_view_preparation import GridViewPreparation
 
 
+@bp.route('/grid_view')
+def grid_view():
+    '''
+    Route für eine Karte mit allen Daten (lange Ladezeit!).
+    '''
+    # Messages für GridView preperieren
+    gvp = GridViewPreparation(100000)
+    geo_json_grid_view = gvp.geo_json()
+
+    # troisdorf 50.820329, 7.141111
+    center_lat = '50.820329'
+    center_lon = '7.141111'
+    distance = '25000'
+
+    # center al tuple
+    center = (center_lat, center_lon)
+
+    # GeoJson von den Messages erstellen
+    geo_json_messages = { 'type': 'FeatureCollection' }
+    features = []
+    geo_json_messages['features'] = features
+
+    # GeoJson erstellen
+    geo_json = { 'type': 'FeatureCollection' }
+    features = []
+    geo_json['features'] = features
+    
+    return render_template(
+        'index.html',
+        title=u'FFRS-TTN-Map',
+        geo_json=json.dumps(geo_json),
+        geo_json_messages=json.dumps(geo_json_messages),
+        geo_json_grid_view=json.dumps(geo_json_grid_view),
+        site='index')
+
+
+
 @bp.route('/')
 @bp.route('/index')
 def index():
@@ -16,7 +53,7 @@ def index():
     Route für die Startseite.
     '''
     # Messages für GridView preperieren
-    gvp = GridViewPreparation()
+    gvp = GridViewPreparation(20000)
     geo_json_grid_view = gvp.geo_json()
 
     # troisdorf 50.820329, 7.141111
