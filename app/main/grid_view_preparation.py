@@ -6,7 +6,10 @@ from sqlalchemy import desc
 class GridViewPreparation():
 
 
-    def __init__(self):
+    def __init__(self, limit):
+
+        self.limit = limit
+        
         self.r_equator = 6378.137
         self.r_pole = 6356.752
 
@@ -45,7 +48,7 @@ class GridViewPreparation():
             Message.longitude,
             Message.dev_id,
             Message.time
-            ).order_by(desc(Message.time)).limit(20000).all()
+            ).order_by(desc(Message.time)).limit(self.limit).all()
 
         self.message_link_list = []
         for message_link in message_link_query_result:
