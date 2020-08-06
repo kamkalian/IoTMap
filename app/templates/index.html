@@ -14,7 +14,7 @@
 
     // parst das übergebene geo_json für GridView in eine javascript variable
     var geo_json_grid_view = JSON.parse({{ geo_json_grid_view|tojson|safe }});
-    
+
     // Layer mit verschiedenen Tiles erstellen
 	var osm   = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -230,6 +230,30 @@
         }
     });
 
+    /*
+    Zeichne Hexagons für GridView
+    */
+    var options = {
+        radius : 12,
+        opacity: 0.5,
+        duration: 500,
+        colorRange: ["#0000FF", "#00FFFF", "#00FF00", "#FFFF00", "#FF7F00", "#ff0000"]
+    };
+    var hexLayer = L.hexbinLayer(options);
+    hexLayer.radiusRange([12, 12]);
+
+    var data = [];
+    geo_json_grid_view["features"].forEach(function(d) {
+        lon = d["geometry"]["coordinates"][1];
+        lat = d["geometry"]["coordinates"][0];
+        rssi = d["properties"]["rssi"]+200;
+        object_data = [lat, lon];
+
+        for(i=0;i<rssi;i++){
+            data.push(object_data);
+        }
+    });
+    hexLayer.data(data);
 
     var messages_layer = L.layerGroup([message_points]);
     var grid_view_layer = L.layerGroup([grid_view]);
@@ -242,14 +266,15 @@
     };
 
     var overlayMaps = {
-        "messages_layer": messages_layer,
+        "last 1000 messages": messages_layer,
         "grid_view_layer": grid_view_layer,
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-    messages_layer.addTo(map);
-    grid_view_layer.addTo(map);
+    hexLayer.addTo(map);
+    //messages_layer.addTo(map);
+    //grid_view_layer.addTo(map);
 
 </script>
 {% endblock %}
