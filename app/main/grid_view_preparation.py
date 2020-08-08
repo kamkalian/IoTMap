@@ -54,8 +54,10 @@ class GridViewPreparation():
         for message_link in message_link_query_result:
             gtw_id = message_link[0]
             rssi = message_link[1]
-            lat = float(message_link[2])
-            lon = float(message_link[3])
+            if message_link[2] is not None:
+                lat = float(message_link[2])
+            if message_link[3] is not None:
+                lon = float(message_link[3])
             dev_id = message_link[4]
             time = message_link[5]
 
