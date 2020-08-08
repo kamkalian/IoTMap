@@ -18,6 +18,9 @@ class Config(object):
     APP_ID = "kurm_de_playground"
     ACCESS_KEY = "ttn-account-v2.3nxT_GinCYFrgO0naCoZH38LYqNYYiqtqct71Uam3Og"
 
+    APP_ID1 = "ttn_bernd_mapper"
+    ACCESS_KEY1 = "ttn-account-v2.aW7zKW0fKZaOl4g5Y_M3evxSRZJs5EdymCMTuYMnmzM"
+
     password = os.environ.get("MYSQL_PASSWORD")
     username = os.environ.get("MYSQL_USER")
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://' + username + ':' + password + '@localhost/ffrs_ttn_map'
