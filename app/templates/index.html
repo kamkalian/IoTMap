@@ -257,6 +257,7 @@
 
     var messages_layer = L.layerGroup([message_points]);
     var grid_view_layer = L.layerGroup([grid_view]);
+    var hex_layer = L.layerGroup([hexLayer]);
 
 
     map.setView(new L.LatLng(50.814903908, 7.156198025), 12);
@@ -268,11 +269,12 @@
     var overlayMaps = {
         "last 1000 messages": messages_layer,
         "grid_view_layer": grid_view_layer,
+        "hex_layer": hex_layer,
     };
 
     L.control.layers(baseMaps, overlayMaps).addTo(map);
 
-    hexLayer.addTo(map);
+    //hexLayer.addTo(map);
     //messages_layer.addTo(map);
     //grid_view_layer.addTo(map);
 
