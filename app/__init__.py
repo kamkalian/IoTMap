@@ -28,6 +28,9 @@ def create_app():
     from app.gateway_sync import bp as gateway_sync_bp
     app.register_blueprint(gateway_sync_bp)
 
+    from app.http_integration import bp as http_integration_bp
+    app.register_blueprint(http_integration_bp)
+
     return app
     
 
