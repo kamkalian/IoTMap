@@ -8,7 +8,8 @@ def ttn_tracker():
 
     data = request.get_json()
     try:
-        payload_fields = json.loads(data["payload_fields"])
+        #payload_fields = json.loads(data["payload_fields"])
+        payload_fields = data["payload_fields"]
         latitude = payload_fields["latitude"]
         longitude = payload_fields["longitude"]
 
